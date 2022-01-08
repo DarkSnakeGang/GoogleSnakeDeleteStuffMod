@@ -147,6 +147,7 @@ function setupEventListeners() {
   document.getElementById('sokoban-goal').onchange = function() {
     checkboxes.checkboxStatuses.sokobanGoal = this.checked;
   }
+  document.getElementById('spin').onchange = spinHandler;
 }
 
 function injectInitialHtml() {
@@ -213,6 +214,9 @@ function injectInitialHtml() {
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
             <li>
               <label><input id="border" type="checkbox" checked>Border</label>
+            </li>
+            <li>
+              <label><input id="spin" type="checkbox">???</label>
             </li>
           </ul>
         </div>
@@ -294,9 +298,16 @@ function injectInitialHtml() {
 function setupCss() {
   let customStyle  = document.createElement('style');
   customStyle.type = 'text/css';
-  customStyle.innerHTML = '.tooltip:hover .tooltiptext:not(:hover){visibility:visible!important;opacity:1!important;}' + 
-  '#drag-handle:hover{background-color:#f2e4b8!important;}' +
-  '#delete-stuff-popup label,#delete-stuff-popup div{user-select:none;}';
+  customStyle.innerHTML = `.tooltip:hover .tooltiptext:not(:hover){visibility:visible!important;opacity:1!important;}
+  #drag-handle:hover{background-color:#f2e4b8!important;}
+  #delete-stuff-popup label,#delete-stuff-popup div{user-select:none;}
+  
+  :root {--rotation-period: 30s;}
+  .cer0Bd[data-spin='true']{animation: spin var(--rotation-period) linear infinite;}
+  .cer0Bd[data-spin='x']{animation: spinx var(--rotation-period) linear infinite;} 
+  @keyframes spin { 100% { transform:rotate(360deg); } }
+  @keyframes spinx { 100% { transform:rotateX(360deg); } }
+  `;
   document.getElementsByTagName('head')[0].appendChild(customStyle);
 }
 
@@ -350,6 +361,26 @@ function brieflyShowSnake() {
     },
     flashSnakeStatus.durationMillisecond
   );
+}
+
+function spinHandler() {
+  let canvasElement = document.getElementsByClassName('cer0Bd')[0];
+  if(!this.checked) {
+    canvasElement.dataset.spin = 'false';
+  } else {
+    let r = document.querySelector(':root');
+    let promptResponse = prompt('How many seconds should a spin take? Enter a number','30');
+    promptResponse = parseFloat(promptResponse);
+    if(isNaN(promptResponse) || promptResponse <= 0) {
+      alert('Invalid value entered. Defaulting to 30');
+      r.style.setProperty('--rotation-period', '30s');
+    } else {
+      alert(`Spinning every ${promptResponse} seconds.`);
+      r.style.setProperty('--rotation-period', promptResponse + 's');
+    }
+    let spinAroundZ = confirm('Spin around z axis?');//Spin around x or z axis.
+    canvasElement.dataset.spin = spinAroundZ ? 'true' : 'x';
+  }
 }
 
 window.snake.deleteStuffMod = function(){
