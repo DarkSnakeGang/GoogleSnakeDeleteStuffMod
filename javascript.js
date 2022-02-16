@@ -445,7 +445,7 @@ let rightEyeRegex = /\([$a-zA-Z0-9_]{0,6}\?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6
   'checkboxes.checkboxStatuses.fruit && $&');
   
   //Poison mode fruit disappearing animation
-  funcWithFruit = assertReplace(funcWithFruit,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\[[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\]\.[$a-zA-Z0-9_]{0,6}\.canvas,0,0,128,128,-\(this\.[$a-zA-Z0-9_]{0,6}\/2\)\*[$a-zA-Z0-9_]{0,6},-\(this\.[$a-zA-Z0-9_]{0,6}\/2\)\*\n?[$a-zA-Z0-9_]{0,6},this\.[$a-zA-Z0-9_]{0,6}\*[$a-zA-Z0-9_]{0,6},this\.[$a-zA-Z0-9_]{0,6}\*[$a-zA-Z0-9_]{0,6}\)/,
+  funcWithFruit = assertReplace(funcWithFruit,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\[[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\]\.[$a-zA-Z0-9_]{0,6}\.canvas,0,0,128,128,\n?-\(this\.[$a-zA-Z0-9_]{0,6}\/2\)\*[$a-zA-Z0-9_]{0,6},-\(this\.[$a-zA-Z0-9_]{0,6}\/2\)\*\n?[$a-zA-Z0-9_]{0,6},this\.[$a-zA-Z0-9_]{0,6}\*[$a-zA-Z0-9_]{0,6},this\.[$a-zA-Z0-9_]{0,6}\*[$a-zA-Z0-9_]{0,6}\)/,
     'checkboxes.checkboxStatuses.fruit && $&');
 
   //Background for infinity is also contained in funcWithFruit
