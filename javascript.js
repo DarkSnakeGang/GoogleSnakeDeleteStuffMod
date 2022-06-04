@@ -430,7 +430,7 @@ function processCode(code) {
 
 
   //Eat anim
-  funcWithBodyParts = assertReplace(funcWithBodyParts,/(\([$a-zA-Z0-9_]{0,6}\?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}:[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)\.render\(Math\.floor\([$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\),[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6})(\);)/,
+  funcWithBodyParts = assertReplace(funcWithBodyParts,/(\([$a-zA-Z0-9_]{0,6}\?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}:[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)\.render\(Math\.floor\([$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\),\n?[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6})(\);)/,
   '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.eatAnimation) && $1 * snakeScale.face $2');
 
   //Tongue
@@ -464,62 +464,7 @@ function processCode(code) {
   //Poison mode fruit disappearing animation
   funcWithFruit = assertReplace(funcWithFruit,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\([a-z],0,\n?0,128,128,-\([a-z]\/2\),-\([a-z]\/2\),[a-z],[a-z]\)/,
     'checkboxes.checkboxStatuses.fruit && $&');
-/*
-  //Background for infinity is also contained in funcWithFruit
-  //For outer wall
-  funcWithFruit = assertReplace(funcWithFruit,/this\.context\.fillRect\(0,0,this\.context\.canvas\.width,this\.context\.canvas\.height\);/,
-  'checkboxes.checkboxStatuses.border && $&');
-*/
-/*
-  //For light tiles (infinity)
-  funcWithFruit = assertReplace(funcWithFruit,/(?<=0\);)this\.context\.fillRect\(0,0,this\.context\.canvas\.width,this\.context\.canvas\.height\);/,
-  'checkboxes.checkboxStatuses.lightTiles && $&');
-*/
-/*  
-  //For dark tiles (infinity)
-  funcWithFruit = assertReplace(funcWithFruit,/this\.context\.fillRect\([a-z]\*this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}-[a-z]\.x\+[a-z]\.x,[a-z]\*this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}-[a-z]\.y\+[a-z]\.y,this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\);/,
-  'checkboxes.checkboxStatuses.darkTiles && $&');
-*/
-/*
-  //Also has a canvas that we can delete to hide all but shadow
-  funcWithFruit = assertReplace(funcWithFruit,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.canvas,[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\);if/,
-  'checkboxes.checkboxStatuses.allButShadow && $&');
-*/
-/*
-  //all but shadow, but only for infinity
-  funcWithFruit = assertReplace(funcWithFruit,/this\.context\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.canvas,\n?[$a-zA-Z0-9_]{0,6}-[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}-[$a-zA-Z0-9_]{0,6}\)}else/,
-  'checkboxes.checkboxStatuses.allButShadow && $&');
-*/
-/*
-  //for walls/locks
-  funcWithFruit = assertReplace(funcWithFruit,/this\.[$a-zA-Z0-9_]{0,6}\.fillRect\([$a-zA-Z0-9_]{0,6}\.x-\n?[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6}\.y-[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\),/,
-  'checkboxes.checkboxStatuses.walls && $&');
-*/
-/*
-  //background for falling lock piece
-  funcWithFruit = assertReplace(funcWithFruit,/this\.[$a-zA-Z0-9_]{0,6}\.fillRect\(-\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/2\)\*[$a-zA-Z0-9_]{0,6},-\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/2\)\*[$a-zA-Z0-9_]{0,6},this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\*[$a-zA-Z0-9_]{0,6},this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\*[$a-zA-Z0-9_]{0,6}\)\),/,
-  'checkboxes.checkboxStatuses.walls && $&');
-*/
-/*
-  //lock icon
-  funcWithFruit = assertReplace(funcWithFruit,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,\n?128\*[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\)\),/,
-  'checkboxes.checkboxStatuses.walls && $&');
-*/
-/*
-  //lock icon and sokoban icon falling
-  funcWithFruit = assertReplace(funcWithFruit,/(drawImage\([a-z]\.[$a-zA-Z0-9_]{0,6}\?)(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas):\n?(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas)/,
-  '$1 (checkboxes.checkboxStatuses.walls ? $2 : new Image()) : (checkboxes.checkboxStatuses.sokobanBox ? $3 : new Image())');
-*/
-/*
-  //keys
-  funcWithFruit = assertReplace(funcWithFruit,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,128\*[a-z]\.type,0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\),/,
-  'checkboxes.checkboxStatuses.keys && $&');
-*/
-/*
-  //keys upside down
-  funcWithFruit = assertReplace(funcWithFruit,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,128\*[a-z]\.type,0,128,128,-\([a-z]\/2\),-\([a-z]\/\n?2\),[a-z],[a-z]\),/,
-  'checkboxes.checkboxStatuses.keys && $&');
-*/
+
   //For compatitibilty, also change this code for animatedSnakeColours
   /*
   //Commented out until I find a new way to do animated Snake Colours
@@ -619,18 +564,24 @@ function processCode(code) {
   'checkboxes.checkboxStatuses.walls && $&');
 
   //lock icon and sokoban icon falling
-  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/(drawImage\(0===[a-z]\.type\?)(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas):\n?(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas)/,
+  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/(drawImage\(0===[a-z]\.type\?)(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas):\n?(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas)/,
   '$1 (checkboxes.checkboxStatuses.walls ? $2 : new Image()) : (checkboxes.checkboxStatuses.sokobanBox ? $3 : new Image())');
 
+  eval(funcWithMiscRendering);
+
+  let funcWithKeyRendering = findFunctionInCode(code,/[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a\)$/,
+  /this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,\n?128\*[a-z]\.type,0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\);/,
+  deleteModDebug);
+
   //keys
-  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,128\*[a-z]\.type,0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\)/,
+  funcWithKeyRendering = assertReplace(funcWithKeyRendering,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,\n?128\*[a-z]\.type,0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\)/,
   'checkboxes.checkboxStatuses.keys && $&');
 
   //keys upside down
-  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,128\*[a-z]\.type,0,128,128,-\([a-z]\/2\),-\([a-z]\/\n?2\),[a-z],[a-z]\),/,
+  funcWithKeyRendering = assertReplace(funcWithKeyRendering,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,128\*[a-z]\.type,0,128,128,-\([a-z]\/2\),-\([a-z]\/2\),[a-z],[a-z]\),/,
   'checkboxes.checkboxStatuses.keys && $&');
 
-  eval(funcWithMiscRendering);
+  eval(funcWithKeyRendering);
 
   let funcWithBodyLines = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a,b,c,d\)$/,
   /quadraticCurveTo/,
