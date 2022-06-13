@@ -411,7 +411,7 @@ function processCode(code) {
   //Function for body parts
   let rightEyeRegex = /(\([a-z]\?[a-z]\.[$a-zA-Z0-9_]{0,6}:[a-z]\.[$a-zA-Z0-9_]{0,6}\)\.render\([a-z],\n?[a-z],[a-z],[a-z]\.[$a-zA-Z0-9_]{0,6},[a-z])(\),)/;
 
-  let funcWithBodyParts = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}=function\(a,b,c,d,e,f\)$/,
+  let funcWithBodyParts = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}=function\(a,b,c,d,e\)$/,
   rightEyeRegex,
   deleteModDebug);
 
@@ -462,7 +462,7 @@ function processCode(code) {
   'checkboxes.checkboxStatuses.fruit && $&');
 
   //Poison mode fruit disappearing animation
-  funcWithFruit = assertReplace(funcWithFruit,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\([a-z],0,\n?0,128,128,-\([a-z]\/2\),-\([a-z]\/2\),[a-z],[a-z]\)/,
+  funcWithFruit = assertReplace(funcWithFruit,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\([a-z],0,\n?0,\n?128,128,-\([a-z]\/2\),-\([a-z]\/2\),[a-z],[a-z]\)/,
     'checkboxes.checkboxStatuses.fruit && $&');
 
   //For compatitibilty, also change this code for animatedSnakeColours
@@ -523,10 +523,10 @@ function processCode(code) {
   //Normal background (i.e not on infinity)
 
   let funcWithBackground = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}=function\(a\)$/,
-    /0\);[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.fillRect\(0,\n?0,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.width,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.height\);/,
-    deleteModDebug);
+  /0\);[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.fillRect\(0,0,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.width,\n?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.height\);/,
+  deleteModDebug);
 
-  funcWithBackground = assertReplace(funcWithBackground,/[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.fillRect\(0,\n?0,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.width,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.height\);/,
+  funcWithBackground = assertReplace(funcWithBackground,/[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.fillRect\(0,0,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.width,\n?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.height\);/,
   'if(checkboxes.checkboxStatuses.lightTiles){$&}');
 
   funcWithBackground = assertReplace(funcWithBackground,/[a-z]\.[$a-zA-Z0-9_]{0,6}\.fillRect\([a-z]\*[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\*[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)/,
@@ -552,7 +552,7 @@ function processCode(code) {
   'checkboxes.checkboxStatuses.darkTiles && $&');
 
   //Also has a canvas that we can delete to hide all but shadow
-  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.canvas,[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\);if/,
+  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.canvas,\n?[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\);if/,
   'checkboxes.checkboxStatuses.allButShadow && $&');
 
   //all but shadow, but only for infinity
@@ -589,7 +589,7 @@ function processCode(code) {
 
   eval(funcWithKeyRendering);
 
-  let funcWithBodyLines = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a,b,c,d\)$/,
+  let funcWithBodyLines = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a,b,c\)$/,
   /quadraticCurveTo/,
   deleteModDebug);
 
@@ -609,7 +609,7 @@ function processCode(code) {
   eval(funcWithBodyLines);
 
   //Portals
-  let funcWithPortals = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a,\n?b\)$/,
+  let funcWithPortals = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a\)$/,
   /[$a-zA-Z0-9_]{0,6}=new [$a-zA-Z0-9_]{0,6}\([$a-zA-Z0-9_]{0,6}\*Math\.cos\(2\*[$a-zA-Z0-9_]{0,6}\*Math\.PI\),[$a-zA-Z0-9_]{0,6}\*Math\.sin\(2\*[$a-zA-Z0-9_]{0,6}\*Math\.PI\)\);/,
   deleteModDebug);
 
