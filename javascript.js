@@ -523,10 +523,10 @@ function processCode(code) {
   //Normal background (i.e not on infinity)
 
   let funcWithBackground = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}=function\(a\)$/,
-  /0\);[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.fillRect\(0,0,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.width,\n?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.height\);/,
+  /0\);[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.fillRect\(0,0,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas\.width,\n?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas\.height\);/,
   deleteModDebug);
 
-  funcWithBackground = assertReplace(funcWithBackground,/[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.fillRect\(0,0,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.width,\n?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.height\);/,
+  funcWithBackground = assertReplace(funcWithBackground,/[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.fillRect\(0,0,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas\.width,\n?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas\.height\);/,
   'if(checkboxes.checkboxStatuses.lightTiles){$&}');
 
   funcWithBackground = assertReplace(funcWithBackground,/[a-z]\.[$a-zA-Z0-9_]{0,6}\.fillRect\([a-z]\*[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\*[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)/,
@@ -535,7 +535,7 @@ function processCode(code) {
   eval(funcWithBackground);
 
   let funcWithMiscRendering = findFunctionInCode(code,/[$a-zA-Z0-9_]{0,6}\.prototype.render=function\(a,b\)$/,
-    /(?<=0\);)this\.context\.fillRect\(0,\n?0,this\.context\.canvas\.width,this\.context\.canvas\.height\);/,
+    /(?<=0\);)[a-z]\.context\.fillRect\(0,0,[a-z]\.context\.canvas\.width,[a-z]\.context\.canvas\.height\);/,
     deleteModDebug);
 
   //Background for infinity is also contained in funcWithFruit
@@ -544,11 +544,11 @@ function processCode(code) {
   'checkboxes.checkboxStatuses.border && $&');
 
   //For light tiles (infinity)
-  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/(?<=0\);)this\.context\.fillRect\(0,\n?0,this\.context\.canvas\.width,this\.context\.canvas\.height\);/,
+  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/(?<=0\);)[a-z]\.context\.fillRect\(0,0,[a-z]\.context\.canvas\.width,[a-z]\.context\.canvas\.height\);/,
   'checkboxes.checkboxStatuses.lightTiles && $&');
 
   //For dark tiles (infinity)
-  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/this\.context\.fillRect\([a-z]\*this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}-[a-z]\.x\+[a-z]\.x,[a-z]\*this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}-[a-z]\.y\+[a-z]\.y,this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\);/,
+  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/[a-z]\.context\.fillRect\([a-z]\*[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}-[a-z]\.x\+[a-z]\.x,[a-z]\*[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}-[a-z]\.y\+[a-z]\.y,[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\);/,
   'checkboxes.checkboxStatuses.darkTiles && $&');
 
   //Also has a canvas that we can delete to hide all but shadow
