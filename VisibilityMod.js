@@ -1,10 +1,10 @@
-window.StealthMod = {};
+window.VisibilityMod = {};
 
 ////////////////////////////////////////////////////////////////////
 //RUNCODEBEFORE
 ////////////////////////////////////////////////////////////////////
 
-window.StealthMod.runCodeBefore = function () {
+window.VisibilityMod.runCodeBefore = function () {
   window.catchError = function catchError(culprit_regex, code) {
     try {
       something = code.match(culprit_regex)[0];
@@ -39,7 +39,7 @@ window.StealthMod.runCodeBefore = function () {
   loadAndRunCodeSynchronous('https://raw.githubusercontent.com/DarkSnakeGang/GoogleSnakePudding/main/PuddingMod.js');
   window.PuddingMod.runCodeBefore();
 
-  console.log("Enabling Stealth Mod");
+  console.log("Enabling Visibility Mod");
 
   window.checkboxes = {
     checkboxStatuses: { leftEye: true, rightEye: true, body: true, snoot: true, lightTiles: true, darkTiles: true, eatAnimation: true, fruit: true, shadow: true, border: true, die: true, lumps: true, portals: true, flashSnake: false, allButShadow: true, keys: true, walls: true, sokobanBox: true, sokobanGoal: true },
@@ -196,7 +196,7 @@ window.StealthMod.runCodeBefore = function () {
   <div id="delete-stuff-draggable" style="width:320px;background-color:khaki;z-index:9002;border-color:saddlebrown;border-style:solid;border-width:4px; border-radius:10px;box-shadow: 0 3px 10px rgba(0,0,0,0.4);position:fixed;left:600px;top:5px">
     <div id="drag-handle" style="width:22px;height:22px;background-color: #fff5d4;position:absolute;border-top-left-radius:4px;border-bottom-right-radius:18px;border-right:3px solid saddlebrown;border-bottom:3px solid saddlebrown;cursor:move"></div>
     <div style="padding:10px;width:300px;margin:0;">
-      <div style="text-align:center;padding:5px;background-color:darkkhaki;color:black;font-family:impact;font-size:20px">Stealth Mod</div>
+      <div style="text-align:center;padding:5px;background-color:darkkhaki;color:black;font-family:impact;font-size:20px">Visibility Mod</div>
       <div style="background-color:darkkhaki;margin-top:5px;padding:0px;padding-bottom:10px;font-family:impact;color:saddlebrown">
         <!--Begin test area-->
         <!--Snake body Section-->
@@ -425,7 +425,7 @@ window.StealthMod.runCodeBefore = function () {
 //ALTERSNAKECODE
 ////////////////////////////////////////////////////////////////////
 
-window.StealthMod.alterSnakeCode = function (code) {
+window.VisibilityMod.alterSnakeCode = function (code) {
   
   code = window.PuddingMod.alterSnakeCode(code);
 
@@ -925,10 +925,10 @@ Same as replace, but throws an error if nothing is changed
   return code;
 }
 
-window.StealthMod.runCodeAfter = function () {
+window.VisibilityMod.runCodeAfter = function () {
   let modIndicator = document.createElement('div');
   modIndicator.style = 'position:absolute;font-family:roboto;color:white;font-size:14px;padding-top:4px;padding-left:30px;user-select: none;';
-  modIndicator.textContent = 'Stealth Mod';
+  modIndicator.textContent = 'Visibility Mod';
   let canvasNode = document.getElementsByClassName('jNB0Ic')[0];
   document.getElementsByClassName('EjCLSb')[0].insertBefore(modIndicator, canvasNode);
 };
