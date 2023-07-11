@@ -429,7 +429,12 @@ window.StealthMod.alterSnakeCode = function (code) {
   
   code = window.PuddingMod.alterSnakeCode(code);
 
-  let deleteModDebug = true;
+  let deleteModDebug = false;
+  if (localStorage.getItem('snakeChosenMod') === "customUrl") {
+    console.log("Detected customUrl - enabling debug mode and printing initial code")
+    deleteModDebug = true;
+    console.log(code)
+  }
   window.snakeScale = { tailStart: 1, tailEnd: 1, face: 1, eyes: 1 };
 
   /*
