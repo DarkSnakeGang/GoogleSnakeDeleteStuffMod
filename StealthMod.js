@@ -906,18 +906,17 @@ Same as replace, but throws an error if nothing is changed
 
   funcWithEat = assertReplace(funcWithEat, /if\([$a-zA-Z0-9_]{0,6}\|\|[$a-zA-Z0-9_]{0,6}\){/,
     '$& checkboxes.checkboxStatuses.flashSnake && brieflyShowSnake();');
-
-  funcWithEat = swapInMainClassPrototype(mainClass, funcWithEat);
+//debugger
+  //funcWithEat = swapInMainClassPrototype(mainClass, funcWithEat);
   //eval(funcWithEat);
   code = code.assertReplace(funcWithEat_Origin, funcWithEat)
 
   console.log(code)
-  debugger
+  
   return code;
 }
 
 window.StealthMod.runCodeAfter = function () {
-  window.mouseMode.runCodeAfter();
   let modIndicator = document.createElement('div');
   modIndicator.style = 'position:absolute;font-family:roboto;color:white;font-size:14px;padding-top:4px;padding-left:30px;user-select: none;';
   modIndicator.textContent = 'Stealth Mod';
