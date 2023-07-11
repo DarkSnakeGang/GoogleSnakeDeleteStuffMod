@@ -920,7 +920,7 @@ Same as replace, but throws an error if nothing is changed
   code = code.assertReplace(funcWithPortals_Origin, funcWithPortals)
   code = code.assertReplace(funcWithEat_Origin, funcWithEat)
 
-  console.log(code)
+  //console.log(code)
   
   return code;
 }
