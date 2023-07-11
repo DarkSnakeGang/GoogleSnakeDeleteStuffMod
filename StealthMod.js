@@ -36,22 +36,18 @@ window.StealthMod.runCodeBefore = function () {
     req.send();
   }
 
-  loadAndRunCodeSynchronous('https://raw.githubusercontent.com/DarkSnakeGang/GoogleSnakePudding/main/DiceMod.js');
-  loadAndRunCodeSynchronous('https://raw.githubusercontent.com/DarkSnakeGang/GoogleSnakeMouseMode/main/modloadercode.js');
+  loadAndRunCodeSynchronous('https://raw.githubusercontent.com/DarkSnakeGang/GoogleSnakePudding/main/PuddingMod.js');
+  window.PuddingMod.runCodeBefore();
 
   console.log("Enabling Stealth Mod");
-  //window.DiceMod.runCodeBefore();
-  //window.mouseMode.runCodeBefore();
 
-
-  let checkboxes = {
+  window.checkboxes = {
     checkboxStatuses: { leftEye: true, rightEye: true, body: true, snoot: true, lightTiles: true, darkTiles: true, eatAnimation: true, fruit: true, shadow: true, border: true, die: true, lumps: true, portals: true, flashSnake: false, allButShadow: true, keys: true, walls: true, sokobanBox: true, sokobanGoal: true },
   };
 
-  let flashSnakeStatus = { flashCount: 0, currentlyFlashingSnake: false, durationMillisecond: 1000 };
+  window.flashSnakeStatus = { flashCount: 0, currentlyFlashingSnake: false, durationMillisecond: 1000 };
 
-
-  let dragHandler = {
+  window.window.dragHandler = {
     dragItem: null,
     dragContainer: null,
     dragObject: null,
@@ -63,31 +59,31 @@ window.StealthMod.runCodeBefore = function () {
     xOffset: 0,
     yOffset: 0,
     dragStart: (e) => {
-      if (e.target === dragHandler.dragItem) {
-        dragHandler.initialX = e.clientX - dragHandler.xOffset;
-        dragHandler.initialY = e.clientY - dragHandler.yOffset;
-        dragHandler.active = true;
+      if (e.target === window.dragHandler.dragItem) {
+        window.dragHandler.initialX = e.clientX - window.dragHandler.xOffset;
+        window.dragHandler.initialY = e.clientY - window.dragHandler.yOffset;
+        window.dragHandler.active = true;
       }
     },
     dragEnd: (e) => {
-      dragHandler.initialX = dragHandler.currentX;
-      dragHandler.initialY = dragHandler.currentY;
-      dragHandler.active = false;
+      window.dragHandler.initialX = window.dragHandler.currentX;
+      window.dragHandler.initialY = window.dragHandler.currentY;
+      window.dragHandler.active = false;
     },
     drag: (e) => {
-      if (dragHandler.active) {
+      if (window.dragHandler.active) {
 
         //Enforce coordinates being within viewport
         let restrictedClientX = Math.max(Math.min(e.clientX, window.innerWidth - 5), 5);
         let restrictedClientY = Math.max(Math.min(e.clientY, window.innerHeight - 5), 5);
 
         e.preventDefault();
-        dragHandler.currentX = restrictedClientX - dragHandler.initialX;
-        dragHandler.currentY = restrictedClientY - dragHandler.initialY;
-        dragHandler.xOffset = dragHandler.currentX;
-        dragHandler.yOffset = dragHandler.currentY;
+        window.dragHandler.currentX = restrictedClientX - window.dragHandler.initialX;
+        window.dragHandler.currentY = restrictedClientY - window.dragHandler.initialY;
+        window.dragHandler.xOffset = window.dragHandler.currentX;
+        window.dragHandler.yOffset = window.dragHandler.currentY;
 
-        dragHandler.setTranslate(dragHandler.currentX, dragHandler.currentY, dragHandler.dragObject);
+        window.dragHandler.setTranslate(window.dragHandler.currentX, window.dragHandler.currentY, window.dragHandler.dragObject);
       }
     },
     setTranslate: function (xPos, yPos, el) {
@@ -121,75 +117,75 @@ window.StealthMod.runCodeBefore = function () {
     });
 
     document.getElementById('left-eye').onchange = function () {
-      checkboxes.checkboxStatuses.leftEye = this.checked;
+      window.checkboxes.checkboxStatuses.leftEye = this.checked;
     }
 
     document.getElementById('right-eye').onchange = function () {
-      checkboxes.checkboxStatuses.rightEye = this.checked;
+      window.checkboxes.checkboxStatuses.rightEye = this.checked;
     }
 
     document.getElementById('snake-body').onchange = function () {
-      checkboxes.checkboxStatuses.body = this.checked;
+      window.checkboxes.checkboxStatuses.body = this.checked;
     }
 
     document.getElementById('snoot').onchange = function () {
-      checkboxes.checkboxStatuses.snoot = this.checked;
+      window.checkboxes.checkboxStatuses.snoot = this.checked;
     }
 
     document.getElementById('light-tiles').onchange = function () {
-      checkboxes.checkboxStatuses.lightTiles = this.checked;
+      window.checkboxes.checkboxStatuses.lightTiles = this.checked;
     }
 
     document.getElementById('dark-tiles').onchange = function () {
-      checkboxes.checkboxStatuses.darkTiles = this.checked;
+      window.checkboxes.checkboxStatuses.darkTiles = this.checked;
     }
 
     document.getElementById('eat-animation').onchange = function () {
-      checkboxes.checkboxStatuses.eatAnimation = this.checked;
+      window.checkboxes.checkboxStatuses.eatAnimation = this.checked;
     }
 
     document.getElementById('tongue').onchange = function () {
-      checkboxes.checkboxStatuses.tongue = this.checked;
+      window.checkboxes.checkboxStatuses.tongue = this.checked;
     }
     document.getElementById('fruit').onchange = function () {
-      checkboxes.checkboxStatuses.fruit = this.checked;
+      window.checkboxes.checkboxStatuses.fruit = this.checked;
     }
     document.getElementById('shadow').onchange = function () {
-      checkboxes.checkboxStatuses.shadow = this.checked;
+      window.checkboxes.checkboxStatuses.shadow = this.checked;
     }
     document.getElementById('border').onchange = function () {
-      checkboxes.checkboxStatuses.border = this.checked;
+      window.checkboxes.checkboxStatuses.border = this.checked;
     }
     document.getElementById('die').onchange = function () {
-      checkboxes.checkboxStatuses.die = this.checked;
+      window.checkboxes.checkboxStatuses.die = this.checked;
     }
     document.getElementById('lumps').onchange = function () {
-      checkboxes.checkboxStatuses.lumps = this.checked;
+      window.checkboxes.checkboxStatuses.lumps = this.checked;
     }
     document.getElementById('portals').onchange = function () {
-      checkboxes.checkboxStatuses.portals = this.checked;
+      window.checkboxes.checkboxStatuses.portals = this.checked;
     }
     document.getElementById('flash-snake').onchange = function () {
-      checkboxes.checkboxStatuses.flashSnake = this.checked;
+      window.checkboxes.checkboxStatuses.flashSnake = this.checked;
     }
     //Handle dropdown for controlling duration of snake flashes
     document.getElementById('flash-snake-timing').onchange = function () {
-      flashSnakeStatus.durationMillisecond = this.value;
+      window.flashSnakeStatus.durationMillisecond = this.value;
     }
     document.getElementById('all-but-shadow').onchange = function () {
-      checkboxes.checkboxStatuses.allButShadow = this.checked;
+      window.checkboxes.checkboxStatuses.allButShadow = this.checked;
     }
     document.getElementById('keys').onchange = function () {
-      checkboxes.checkboxStatuses.keys = this.checked;
+      window.checkboxes.checkboxStatuses.keys = this.checked;
     }
     document.getElementById('walls').onchange = function () {
-      checkboxes.checkboxStatuses.walls = this.checked;
+      window.checkboxes.checkboxStatuses.walls = this.checked;
     }
     document.getElementById('sokoban-box').onchange = function () {
-      checkboxes.checkboxStatuses.sokobanBox = this.checked;
+      window.checkboxes.checkboxStatuses.sokobanBox = this.checked;
     }
     document.getElementById('sokoban-goal').onchange = function () {
-      checkboxes.checkboxStatuses.sokobanGoal = this.checked;
+      window.checkboxes.checkboxStatuses.sokobanGoal = this.checked;
     }
     document.getElementById('spin').onchange = spinHandler;
   }
@@ -415,7 +411,7 @@ window.StealthMod.runCodeBefore = function () {
   setupCss();
   loadTooltips();
   setupEventListeners();
-  dragHandler.initialiseDragHandler();
+  window.dragHandler.initialiseDragHandler();
 
 }
 
@@ -424,9 +420,11 @@ window.StealthMod.runCodeBefore = function () {
 ////////////////////////////////////////////////////////////////////
 
 window.StealthMod.alterSnakeCode = function (code) {
+  
+  code = window.PuddingMod.alterSnakeCode(code);
 
   let deleteModDebug = true;
-  var snakeScale = { tailStart: 1, tailEnd: 1, face: 1, eyes: 1 };
+  window.snakeScale = { tailStart: 1, tailEnd: 1, face: 1, eyes: 1 };
 
   /*
   This function will search for a function/method in some code and return this function as a string
@@ -601,19 +599,19 @@ Same as replace, but throws an error if nothing is changed
     throw new Error('Line break error! Failed to failed to find match for regex - most likely caused by a new line break. No suggestions provided');
   }
 
-  function brieflyShowSnake() {
-    if (flashSnakeStatus.flashCount < 0) {
+  window.brieflyShowSnake = function brieflyShowSnake() {
+    if (window.flashSnakeStatus.flashCount < 0) {
       throw new Error('Error with flashing snake');
     }
-    flashSnakeStatus.flashCount++;
-    flashSnakeStatus.currentlyFlashingSnake = true;
+    window.flashSnakeStatus.flashCount++;
+    window.flashSnakeStatus.currentlyFlashingSnake = true;
 
     //Clear flashed snake after a duration
     setTimeout(
       function () {
-        flashSnakeStatus.flashCount--; if (flashSnakeStatus.flashCount === 0) { flashSnakeStatus.currentlyFlashingSnake = false; }
+        window.flashSnakeStatus.flashCount--; if (window.flashSnakeStatus.flashCount === 0) { window.flashSnakeStatus.currentlyFlashingSnake = false; }
       },
-      flashSnakeStatus.durationMillisecond
+      window.flashSnakeStatus.durationMillisecond
     );
   }
 
@@ -633,39 +631,38 @@ Same as replace, but throws an error if nothing is changed
     rightEyeRegex,
     deleteModDebug);
 
-  //Right Eye
+  //Right Eye - this is Die Anim now?!
   funcWithBodyParts = assertReplace(funcWithBodyParts, rightEyeRegex,
-    '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.rightEye) && $1 * snakeScale.eyes $2');
+    '(window.flashSnakeStatus.currentlyFlashingSnake || window.checkboxes.checkboxStatuses.die) && $1 * window.snakeScale.eyes $2');
 
   //Left Eye
   funcWithBodyParts = assertReplace(funcWithBodyParts, /(\([$a-zA-Z0-9_]{0,6}\?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}:[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)\.render\([$a-zA-Z0-9_]{0,6},\n?[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},\n?[$a-zA-Z0-9_*]{0,6})(\)\);)/,
-    '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.leftEye) && $1 * snakeScale.eyes $2');
+    '(window.flashSnakeStatus.currentlyFlashingSnake || window.checkboxes.checkboxStatuses.leftEye) && $1 * window.snakeScale.eyes $2');
 
   //Eye offsets
   funcWithBodyParts = assertReplaceAll(funcWithBodyParts, /[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\+=\n?Math\.(?:cos|sin)\([$a-zA-Z0-9_]{0,6}[+-][$a-zA-Z0-9_]{0,6}\)\*[$a-zA-Z0-9_]{0,6}/g,
-    '$& * snakeScale.eyes');
+    '$& * window.snakeScale.eyes');
 
   //Eat anim
   funcWithBodyParts = assertReplace(funcWithBodyParts, /(\([$a-zA-Z0-9_]{0,6}\?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}:[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)\.render\(Math\.floor\([$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\),\n?[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_*]{0,6})(\);)/,
-    '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.eatAnimation) && $1 * snakeScale.face $2');
+    '(window.flashSnakeStatus.currentlyFlashingSnake || window.checkboxes.checkboxStatuses.eatAnimation) && $1 * window.snakeScale.face $2');
 
   //Tongue
   funcWithBodyParts = assertReplace(funcWithBodyParts, /(\([$a-zA-Z0-9_]{0,6}\?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}:[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)\.render\([$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6})(\)\)})/,
-    'checkboxes.checkboxStatuses.tongue && $1 * snakeScale.face $2');
+    'window.checkboxes.checkboxStatuses.tongue && $1 * window.snakeScale.face $2');
 
-  //Die anim
+  //Die anim - this is Right Eye now?!
   funcWithBodyParts = assertReplace(funcWithBodyParts, /(\([$a-zA-Z0-9_]{0,6}\?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}:[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)\.render\([$a-zA-Z0-9_]{0,6},\n?[$a-zA-Z0-9_]{0,6},\n?[$a-zA-Z0-9_]{0,6},\n?[$a-zA-Z0-9_]{0,6},\n?[$a-zA-Z0-9_*]{0,6})(\),)/,
-    '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.die) && $1 * snakeScale.face $2');
+    '(window.flashSnakeStatus.currentlyFlashingSnake || window.checkboxes.checkboxStatuses.rightEye) && $1 * window.snakeScale.face $2');
 
   //Snoot
   funcWithBodyParts = assertReplace(funcWithBodyParts, /[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.fill\(\)/,
-    '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.snoot) && $&');
+    '(window.flashSnakeStatus.currentlyFlashingSnake || window.checkboxes.checkboxStatuses.snoot) && $&');
 
   //Snoot scale
-  funcWithBodyParts = assertReplace(funcWithBodyParts, /\.4/, 'snakeScale.face * 0.4');
+  funcWithBodyParts = assertReplace(funcWithBodyParts, /\.4/, 'window.snakeScale.face * 0.4');
 
   //eval(funcWithBodyParts);
-  code = code.assertReplace(funcWithBodyParts_Origin, funcWithBodyParts)
 
   //Function for fruit
   let fruitRegex = /[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.drawImage\([$a-zA-Z0-9_]{0,6},0,0,[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\.x-[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6}\.y-[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\)/;
@@ -680,11 +677,11 @@ Same as replace, but throws an error if nothing is changed
 
   //Fruit
   funcWithFruit = assertReplace(funcWithFruit, fruitRegex,
-    'checkboxes.checkboxStatuses.fruit && $&');
+    'window.checkboxes.checkboxStatuses.fruit && $&');
 
   //Poison mode fruit disappearing animation
   funcWithFruit = assertReplace(funcWithFruit, /this\.[$a-zA-Z0-9_]{0,6}\.drawImage\([a-z],0,\n?0,\n?[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},-\([a-z]\/2\),\n?-\([a-z]\/2\),[a-z],[a-z]\)/,
-    'checkboxes.checkboxStatuses.fruit && $&');
+    'window.checkboxes.checkboxStatuses.fruit && $&');
 
   //For compatitibilty, also change this code for animatedSnakeColours
   /*
@@ -693,7 +690,6 @@ Same as replace, but throws an error if nothing is changed
   */
 
   //eval(funcWithFruit);
-  code = code.assertReplace(funcWithFruit_Origin, funcWithFruit)
 
 
   let funcWithRenderWall_Origin = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a\)$/,
@@ -706,13 +702,12 @@ Same as replace, but throws an error if nothing is changed
 
   //for walls/locks
   funcWithRenderWall = assertReplace(funcWithRenderWall, /this\.[$a-zA-Z0-9_]{0,6}\.fillRect\([$a-zA-Z0-9_]{0,6}\.x-\n?[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6}\.y-[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\)/,
-    'checkboxes.checkboxStatuses.walls && $&');
+    'window.checkboxes.checkboxStatuses.walls && $&');
 
   //lock icon
   funcWithRenderWall = assertReplace(funcWithRenderWall, /this\.[$a-zA-Z0-9_]{0,6}\.drawImage\([$a-zA-Z0-9_]{0,6}\(this\.[$a-zA-Z0-9_]{0,6}\),\n?128\*[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\)\)/,
-    'checkboxes.checkboxStatuses.walls && $&');
+    'window.checkboxes.checkboxStatuses.walls && $&');
 
-  code = code.assertReplace(funcWithRenderWall_Origin, funcWithRenderWall)
 
 
   //Sokoban box
@@ -727,14 +722,13 @@ Same as replace, but throws an error if nothing is changed
 
   //Sokoban
   funcWithSokoban = assertReplace(funcWithSokoban, /[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.drawImage\([$a-zA-Z0-9_]{0,6}\([$a-zA-Z0-9_]{0,6}.[$a-zA-Z0-9_]{0,6}\),128,0,128,\n?128,[$a-zA-Z0-9_]{0,6}\.x-[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6}\.y-[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\)/,
-    'checkboxes.checkboxStatuses.sokobanBox && $&');
+    'window.checkboxes.checkboxStatuses.sokobanBox && $&');
 
   //Sokoban
   funcWithSokoban = assertReplace(funcWithSokoban, /[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.drawImage\([$a-zA-Z0-9_]{0,6}\([$a-zA-Z0-9_]{0,6}.[$a-zA-Z0-9_]{0,6}\),\n?0,0,128,128,[$a-zA-Z0-9_]{0,6}\.x-[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6}\.y-\n?[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6},\n?[$a-zA-Z0-9_]{0,6}\)/,
-    'checkboxes.checkboxStatuses.sokobanBox && $&');
+    'window.checkboxes.checkboxStatuses.sokobanBox && $&');
 
   //  eval(funcWithSokoban);
-  code = code.assertReplace(funcWithSokoban_Origin, funcWithSokoban)
 
   //Sokoban goal func
   let funcWithSokobanGoal_Origin = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}=function\(a,b,c,d,e\)$/,
@@ -747,10 +741,9 @@ Same as replace, but throws an error if nothing is changed
 
   //Sokoban goal
   funcWithSokobanGoal = assertReplace(funcWithSokobanGoal, /[a-z]\.[$a-zA-Z0-9_]{0,6}\.drawImage\([$a-zA-Z0-9_]{0,6}\([$a-zA-Z0-9_]{0,6}.[$a-zA-Z0-9_]{0,6}\),128\*[a-z],0,128,128,[a-z]\.x-[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/2\+[a-z],[a-z]\.y-[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/2\+[a-z],[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},\n?[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)/,
-    'checkboxes.checkboxStatuses.sokobanGoal && $&');
+    'window.checkboxes.checkboxStatuses.sokobanGoal && $&');
 
   //eval(funcWithSokobanGoal);
-  code = code.assertReplace(funcWithSokobanGoal_Origin, funcWithSokobanGoal)
 
 
   //Shadow
@@ -758,9 +751,8 @@ Same as replace, but throws an error if nothing is changed
 
   let funcWithShadow = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}=function\([$a-zA-Z0-9_]{0,6}\)$/, /destination-atop/, deleteModDebug);
 
-  funcWithShadow = assertReplace(funcWithShadow, /[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.globalCompositeOperation="destination-atop";/, 'if(!checkboxes.checkboxStatuses.shadow){return}$&')
+  funcWithShadow = assertReplace(funcWithShadow, /[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.globalCompositeOperation="destination-atop";/, 'if(!window.checkboxes.checkboxStatuses.shadow){return}$&')
 
-  code = code.assertReplace(funcWithShadow_Origin, funcWithShadow)
 
   //Normal background (i.e not on infinity)
 
@@ -773,13 +765,12 @@ Same as replace, but throws an error if nothing is changed
     deleteModDebug);
 
   funcWithBackground = assertReplace(funcWithBackground, /[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.fillRect\(0,0,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas\.width,\n?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas\.height\);/,
-    'if(checkboxes.checkboxStatuses.lightTiles){$&}');
+    'if(window.checkboxes.checkboxStatuses.lightTiles){$&}');
 
   funcWithBackground = assertReplace(funcWithBackground, /[a-z]\.[$a-zA-Z0-9_]{0,6}\.fillRect\([a-z]\*[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\*[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)/,
-    'checkboxes.checkboxStatuses.darkTiles && $&');
+    'window.checkboxes.checkboxStatuses.darkTiles && $&');
 
 
-  code = code.assertReplace(funcWithBackground_Origin, funcWithBackground)
 
   //eval(funcWithBackground);
 
@@ -794,26 +785,25 @@ Same as replace, but throws an error if nothing is changed
   //Background for infinity is also contained in funcWithFruit
   //For outer wall
   funcWithMiscRendering = assertReplace(funcWithMiscRendering, /this\.context\.fillRect\(0,0,this\.context\.canvas\.width,this\.context\.canvas\.height\);/,
-    'checkboxes.checkboxStatuses.border && $&');
+    'window.checkboxes.checkboxStatuses.border && $&');
 
   //For light tiles (infinity)
   funcWithMiscRendering = assertReplace(funcWithMiscRendering, /(?<=0\);)[$a-zA-Z0-9_]{0,6}\.context\.fillRect\(0,0,[$a-zA-Z0-9_]{0,6}\.context\.canvas\.width,[$a-zA-Z0-9_]{0,6}\.context\.canvas\.height\);/,
-    'checkboxes.checkboxStatuses.lightTiles && $&');
+    'window.checkboxes.checkboxStatuses.lightTiles && $&');
 
   //For dark tiles (infinity)
   funcWithMiscRendering = assertReplace(funcWithMiscRendering, /[$a-zA-Z0-9_]{0,6}\.context\.fillRect\([$a-zA-Z0-9_]{0,6}\*[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}-[$a-zA-Z0-9_]{0,6}\.x\+[$a-zA-Z0-9_]{0,6}\.x,[$a-zA-Z0-9_]{0,6}\*[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}-[$a-zA-Z0-9_]{0,6}\.y\+[$a-zA-Z0-9_]{0,6}\.y,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\);/,
-    'checkboxes.checkboxStatuses.darkTiles && $&');
+    'window.checkboxes.checkboxStatuses.darkTiles && $&');
 
   //Also has a canvas that we can delete to hide all but shadow
   funcWithMiscRendering = assertReplace(funcWithMiscRendering, /this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.canvas,\n?[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\);if/,
-    'checkboxes.checkboxStatuses.allButShadow && $&');
+    'window.checkboxes.checkboxStatuses.allButShadow && $&');
 
   //all but shadow, but only for infinity
   funcWithMiscRendering = assertReplace(funcWithMiscRendering, /this\.context\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.canvas,\n?[$a-zA-Z0-9_]{0,6}-[$a-zA-Z0-9_]{0,6},\n?[$a-zA-Z0-9_]{0,6}-[$a-zA-Z0-9_]{0,6}\)}else/,
-    'checkboxes.checkboxStatuses.allButShadow && $&');
+    'window.checkboxes.checkboxStatuses.allButShadow && $&');
 
   //eval(funcWithMiscRendering);
-  code = code.assertReplace(funcWithMiscRendering_Origin, funcWithMiscRendering)
 
   let funcWithLockRendering_Origin = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(\)$/,
     /this\.[$a-zA-Z0-9_]{0,6}.save\(\),this\.[$a-zA-Z0-9_]{0,6}\.translate\([a-z],[a-z]\),this\.[$a-zA-Z0-9_]{0,6}\.rotate\([a-z]\),/,
@@ -825,14 +815,13 @@ Same as replace, but throws an error if nothing is changed
 
   //background for falling lock piece
   funcWithLockRendering = assertReplace(funcWithLockRendering, /this\.[$a-zA-Z0-9_]{0,6}\.fillRect\(-\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/2\)\*[$a-zA-Z0-9_]{0,6},-\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/\n?2\)\*[$a-zA-Z0-9_]{0,6},this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\*[$a-zA-Z0-9_]{0,6},\n?this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\*\n?[$a-zA-Z0-9_]{0,6}\)\)/,
-    'checkboxes.checkboxStatuses.walls && $&');
+    'window.checkboxes.checkboxStatuses.walls && $&');
 
   //lock icon and sokoban icon falling
   funcWithLockRendering = assertReplace(funcWithLockRendering, /(drawImage\(0===[a-z]\.type\?)([$a-zA-Z0-9_]{0,6}\(this.[$a-zA-Z0-9_]{0,6}.[$a-zA-Z0-9_]{0,6}\)):\n?([$a-zA-Z0-9_]{0,6}\(this.[$a-zA-Z0-9_]{0,6}.[$a-zA-Z0-9_]{0,6}\))/,
-    '$1 (checkboxes.checkboxStatuses.walls ? $2 : new Image()) : (checkboxes.checkboxStatuses.sokobanBox ? $3 : new Image())');
+    '$1 (window.checkboxes.checkboxStatuses.walls ? $2 : new Image()) : (window.checkboxes.checkboxStatuses.sokobanBox ? $3 : new Image())');
 
   //eval(funcWithLockRendering);
-  code = code.assertReplace(funcWithLockRendering_Origin, funcWithLockRendering)
 
   let funcWithKeyRendering_Origin = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a\)$/,
     /this\.[$a-zA-Z0-9_]{0,6}\.drawImage\([$a-zA-Z0-9_]{0,6}\(this.[$a-zA-Z0-9_]{0,6}.[$a-zA-Z0-9_]{0,6}\),\n?128\*[a-z]\.type,0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\);/,
@@ -844,13 +833,12 @@ Same as replace, but throws an error if nothing is changed
 
   //keys
   funcWithKeyRendering = assertReplace(funcWithKeyRendering, /this\.[$a-zA-Z0-9_]{0,6}\.drawImage\([$a-zA-Z0-9_]{0,6}\(this.[$a-zA-Z0-9_]{0,6}.[$a-zA-Z0-9_]{0,6}\),\n?128\*[a-z]\.type,0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\)/,
-    'checkboxes.checkboxStatuses.keys && $&');
+    'window.checkboxes.checkboxStatuses.keys && $&');
 
   //keys upside down
   funcWithKeyRendering = assertReplace(funcWithKeyRendering, /this\.[$a-zA-Z0-9_]{0,6}\.drawImage\([$a-zA-Z0-9_]{0,6}\(this.[$a-zA-Z0-9_]{0,6}.[$a-zA-Z0-9_]{0,6}\),128\*[a-z]\.type,0,128,128,-\([a-z]\/2\),-\([a-z]\/2\),[a-z],[a-z]\),/,
-    'checkboxes.checkboxStatuses.keys && $&');
+    'window.checkboxes.checkboxStatuses.keys && $&');
 
-  code = code.assertReplace(funcWithKeyRendering_Origin, funcWithKeyRendering)
 
   //eval(funcWithKeyRendering);
 
@@ -862,19 +850,18 @@ Same as replace, but throws an error if nothing is changed
     deleteModDebug);
 
   funcWithBodyLines = assertReplace(funcWithBodyLines, /this\.[$a-zA-Z0-9_]{0,6}\.fill\(\)\)\)\)/,
-    '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.lumps) && $&');
+    '(window.flashSnakeStatus.currentlyFlashingSnake || window.checkboxes.checkboxStatuses.lumps) && $&');
 
   funcWithBodyLines = assertReplaceAll(funcWithBodyLines, /[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.lineTo\([$a-zA-Z0-9_]{0,6}\.x,[$a-zA-Z0-9_]{0,6}\.y\)/g,
-    '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.body) && $&');
+    '(window.flashSnakeStatus.currentlyFlashingSnake || window.checkboxes.checkboxStatuses.body) && $&');
 
   funcWithBodyLines = assertReplaceAll(funcWithBodyLines, /[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.quadraticCurveTo\([$a-zA-Z0-9_]{0,6}\.x,[$a-zA-Z0-9_]{0,6}\.y,[$a-zA-Z0-9_]{0,6}\.x,[$a-zA-Z0-9_]{0,6}\.y\)/g,
-    '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.body) && $&');
+    '(window.flashSnakeStatus.currentlyFlashingSnake || window.checkboxes.checkboxStatuses.body) && $&');
 
   //Body scale
-  funcWithBodyLines = assertReplace(funcWithBodyLines, /\.8/, '(snakeScale.tailStart * 0.8)');
-  funcWithBodyLines = assertReplace(funcWithBodyLines, /\.4/, '(snakeScale.tailEnd * 0.4)');
+  funcWithBodyLines = assertReplace(funcWithBodyLines, /\.8/, '(window.snakeScale.tailStart * 0.8)');
+  funcWithBodyLines = assertReplace(funcWithBodyLines, /\.4/, '(window.snakeScale.tailEnd * 0.4)');
 
-  code = code.assertReplace(funcWithBodyLines_Origin, funcWithBodyLines)
 
   //eval(funcWithBodyLines);
 
@@ -888,10 +875,9 @@ Same as replace, but throws an error if nothing is changed
     deleteModDebug);
 
   funcWithPortals = assertReplaceAll(funcWithPortals, /[$a-zA-Z0-9_]{0,6}\.fill\(\)/g,
-    'checkboxes.checkboxStatuses.portals && $&');
+    'window.checkboxes.checkboxStatuses.portals && $&');
 
   //eval(funcWithPortals);
-  code = code.assertReplace(funcWithPortals_Origin, funcWithPortals)
 
   let mainClass = code.match(/([$a-zA-Z0-9_]{0,6})=function\(a,b,c\){this\.settings=[a-z];this\.menu=[a-z];this\.header=[a-z];/)[1];
 
@@ -905,10 +891,22 @@ Same as replace, but throws an error if nothing is changed
     deleteModDebug);
 
   funcWithEat = assertReplace(funcWithEat, /if\([$a-zA-Z0-9_]{0,6}\|\|[$a-zA-Z0-9_]{0,6}\){/,
-    '$& checkboxes.checkboxStatuses.flashSnake && brieflyShowSnake();');
+    '$& window.checkboxes.checkboxStatuses.flashSnake && window.brieflyShowSnake();');
 //debugger
   //funcWithEat = swapInMainClassPrototype(mainClass, funcWithEat);
   //eval(funcWithEat);
+  code = code.assertReplace(funcWithFruit_Origin, funcWithFruit)
+  code = code.assertReplace(funcWithBodyParts_Origin, funcWithBodyParts)
+  code = code.assertReplace(funcWithRenderWall_Origin, funcWithRenderWall)
+  code = code.assertReplace(funcWithSokoban_Origin, funcWithSokoban)
+  code = code.assertReplace(funcWithSokobanGoal_Origin, funcWithSokobanGoal)
+  code = code.assertReplace(funcWithShadow_Origin, funcWithShadow)
+  code = code.assertReplace(funcWithBackground_Origin, funcWithBackground)
+  code = code.assertReplace(funcWithMiscRendering_Origin, funcWithMiscRendering)
+  code = code.assertReplace(funcWithLockRendering_Origin, funcWithLockRendering)
+  code = code.assertReplace(funcWithKeyRendering_Origin, funcWithKeyRendering)
+  code = code.assertReplace(funcWithBodyLines_Origin, funcWithBodyLines)
+  code = code.assertReplace(funcWithPortals_Origin, funcWithPortals)
   code = code.assertReplace(funcWithEat_Origin, funcWithEat)
 
   console.log(code)
