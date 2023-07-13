@@ -1,3 +1,65 @@
+//Mod no longer works. Show popup message.
+
+let messageBoxEl = document.createElement('div');
+let messageStyle = `
+background-color: #ebebebd9;
+    border-radius: 1.5vh;
+    position: absolute;
+    height: unset;
+    z-index: 1000000;
+    top: 30px;
+    left: 50%;
+    backdrop-filter: blur(5px);
+    text-align: center;
+    padding: 40px;
+    transform: translate(-50%, 0);
+    box-shadow: 0px 0px 8px rgba(0,0,0,0.4);
+    border: 1px solid #f0f0f0;
+    font-size: 2.4vh;
+`;
+let messageHtml = `
+<span id="message-close" style="
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 0.9em;
+">&#x2715</span>
+<h1 style="
+    font-family: helvetica, sans-serif;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    font-size: 2em;
+    font-weight: bold;
+    margin-block-start: 0.67em;
+    margin-block-end: 0.67em;
+">This mod has moved.</h1>
+<a href="https://github.com/DarkSnakeGang/GoogleSnakeModLoader" style="
+    font-family: helvetica, sans-serif;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+">https://github.com/DarkSnakeGang/GoogleSnakeModLoader</a>
+<br><br>
+<img src="https://github.com/DarkSnakeGang/GoogleSnakeModLoader/blob/main/docs/mod-loader-transparent-bg-1-0-9.png?raw=true" style="
+    width: 345px;
+    height: auto;
+    min-width: 65%;
+    filter: drop-shadow(0px 0px 4px rgba(0,0,0,0.2));
+">
+<br>
+<p style="
+    font-family: helvetica,sans-serif;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+">Get the new mod by clicking on the above link and following the instructions. The new mod combines several different mods together. The bookmark method no longer works as Google unintentionally broke it. We have a more detailed explanation <a href="https://github.com/DarkSnakeGang/GoogleSnakeModLoader/blob/main/docs/why_not_bookmarks.md" target="_blank">here</a>.
+The mods now require a browser extension to work. <br><br>We apologise for the inconvenience of this.</p>
+`;
+messageBoxEl.id = 'message-box';
+messageBoxEl.style = messageStyle;
+messageBoxEl.innerHTML = messageHtml;
+document.body.appendChild(messageBoxEl);
+
+document.getElementById('message-close').addEventListener('click', function() {
+  document.getElementById('message-box').remove();
+});
+
 //Change to false when releasing - turns on console.log printing
 let deleteModDebug = false;
 
@@ -409,9 +471,9 @@ window.snake.deleteStuffMod = function(){
 
 function processCode(code) {
   //Function for body parts
-  let rightEyeRegex = /(\([a-z]\?[a-z]\.[$a-zA-Z0-9_]{0,6}:[a-z]\.[$a-zA-Z0-9_]{0,6}\)\.render\([a-z],\n?[a-z],[a-z],[a-z]\.[$a-zA-Z0-9_]{0,6},[a-z])(\),)/;
+  let rightEyeRegex = /(\([a-z]\?[a-z]\.[$a-zA-Z0-9_]{0,8}:[a-z]\.[$a-zA-Z0-9_]{0,8}\)\.render\([a-z],\n?[a-z],[a-z],[a-z]\.[$a-zA-Z0-9_]{0,8},[a-z])(\),)/;
 
-  let funcWithBodyParts = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}=function\(a,b,c,d,e\)$/,
+  let funcWithBodyParts = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,8}=function\(a,b,c,d,e\)$/,
   rightEyeRegex,
   deleteModDebug);
 
@@ -420,29 +482,29 @@ function processCode(code) {
   '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.rightEye) && $1 * snakeScale.eyes $2');
 
   //Left Eye
-  funcWithBodyParts = assertReplace(funcWithBodyParts,/(\([$a-zA-Z0-9_]{0,6}\?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}:[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)\.render\([$a-zA-Z0-9_]{0,6},\n?[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},\n?[$a-zA-Z0-9_]{0,6})(\)\);)/,
+  funcWithBodyParts = assertReplace(funcWithBodyParts,/(\([$a-zA-Z0-9_]{0,8}\?[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}:[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\)\.render\([$a-zA-Z0-9_]{0,8},\n?[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8},\n?[$a-zA-Z0-9_]{0,8})(\)\);)/,
   '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.leftEye) && $1 * snakeScale.eyes $2');
 
   //Eye offsets
-  funcWithBodyParts = assertReplaceAll(funcWithBodyParts,/[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\+=\n?Math\.(?:cos|sin)\([$a-zA-Z0-9_]{0,6}[+-][$a-zA-Z0-9_]{0,6}\)\*[$a-zA-Z0-9_]{0,6}/g,
+  funcWithBodyParts = assertReplaceAll(funcWithBodyParts,/[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\+=\n?Math\.(?:cos|sin)\([$a-zA-Z0-9_]{0,8}[+-][$a-zA-Z0-9_]{0,8}\)\*[$a-zA-Z0-9_]{0,8}/g,
   '$& * snakeScale.eyes');
 
 
 
   //Eat anim
-  funcWithBodyParts = assertReplace(funcWithBodyParts,/(\([$a-zA-Z0-9_]{0,6}\?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}:[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)\.render\(Math\.floor\([$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\),\n?[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6})(\);)/,
+  funcWithBodyParts = assertReplace(funcWithBodyParts,/(\([$a-zA-Z0-9_]{0,8}\?[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}:[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\)\.render\(Math\.floor\([$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\),\n?[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8})(\);)/,
   '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.eatAnimation) && $1 * snakeScale.face $2');
 
   //Tongue
-  funcWithBodyParts = assertReplace(funcWithBodyParts,/(\([$a-zA-Z0-9_]{0,6}\?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}:[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)\.render\([$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6})(\)\)})/,
+  funcWithBodyParts = assertReplace(funcWithBodyParts,/(\([$a-zA-Z0-9_]{0,8}\?[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}:[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\)\.render\([$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8})(\)\)})/,
   'checkboxes.checkboxStatuses.tongue && $1 * snakeScale.face $2');
 
   //Die anim
-  funcWithBodyParts = assertReplace(funcWithBodyParts,/(\([$a-zA-Z0-9_]{0,6}\?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}:[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)\.render\([$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\*[$a-zA-Z0-9_]{0,6})(\),)/,
+  funcWithBodyParts = assertReplace(funcWithBodyParts,/(\([$a-zA-Z0-9_]{0,8}\?[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}:[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\)\.render\([$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8}\*[$a-zA-Z0-9_]{0,8})(\),)/,
   '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.die) && $1 * snakeScale.face $2');
 
   //Snoot
-  funcWithBodyParts = assertReplace(funcWithBodyParts,/[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.fill\(\);/,
+  funcWithBodyParts = assertReplace(funcWithBodyParts,/[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.fill\(\);/,
   '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.snoot) && $&');
 
   //Snoot scale
@@ -451,9 +513,9 @@ function processCode(code) {
   eval(funcWithBodyParts);
 
   //Function for fruit
-  let fruitRegex = /[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.drawImage\([$a-zA-Z0-9_]{0,6},0,0,128,128,[$a-zA-Z0-9_]{0,6}\.x-[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6}\.y-[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\)/;
+  let fruitRegex = /[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.drawImage\([$a-zA-Z0-9_]{0,8},0,0,128,128,[$a-zA-Z0-9_]{0,8}\.x-[$a-zA-Z0-9_]{0,8}\/2,[$a-zA-Z0-9_]{0,8}\.y-[$a-zA-Z0-9_]{0,8}\/2,[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8}\)/;
 
-  let funcWithFruit = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\([$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\)$/,
+  let funcWithFruit = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,8}\.prototype\.render=function\([$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8}\)$/,
   fruitRegex, 
   deleteModDebug);
 
@@ -462,7 +524,7 @@ function processCode(code) {
   'checkboxes.checkboxStatuses.fruit && $&');
 
   //Poison mode fruit disappearing animation
-  funcWithFruit = assertReplace(funcWithFruit,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\([a-z],0,\n?0,\n?128,128,-\([a-z]\/2\),-\([a-z]\/2\),[a-z],[a-z]\)/,
+  funcWithFruit = assertReplace(funcWithFruit,/this\.[$a-zA-Z0-9_]{0,8}\.drawImage\([a-z],0,\n?0,\n?128,128,-\([a-z]\/2\),-\([a-z]\/2\),[a-z],[a-z]\)/,
     'checkboxes.checkboxStatuses.fruit && $&');
 
   //For compatitibilty, also change this code for animatedSnakeColours
@@ -473,69 +535,69 @@ function processCode(code) {
 
   eval(funcWithFruit);
 
-  let funcWithRenderWall = findFunctionInCode(code,/[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a\)$/,
-  /this\.[$a-zA-Z0-9_]{0,6}\.fillRect\([$a-zA-Z0-9_]{0,6}\.x-\n?[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6}\.y-[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\)/,
+  let funcWithRenderWall = findFunctionInCode(code,/[$a-zA-Z0-9_]{0,8}\.prototype\.render=function\(a\)$/,
+  /this\.[$a-zA-Z0-9_]{0,8}\.fillRect\([$a-zA-Z0-9_]{0,8}\.x-\n?[$a-zA-Z0-9_]{0,8}\/2,[$a-zA-Z0-9_]{0,8}\.y-[$a-zA-Z0-9_]{0,8}\/2,[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8}\)/,
   deleteModDebug);
 
   //for walls/locks
-  funcWithRenderWall = assertReplace(funcWithRenderWall,/this\.[$a-zA-Z0-9_]{0,6}\.fillRect\([$a-zA-Z0-9_]{0,6}\.x-\n?[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6}\.y-[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\)/,
+  funcWithRenderWall = assertReplace(funcWithRenderWall,/this\.[$a-zA-Z0-9_]{0,8}\.fillRect\([$a-zA-Z0-9_]{0,8}\.x-\n?[$a-zA-Z0-9_]{0,8}\/2,[$a-zA-Z0-9_]{0,8}\.y-[$a-zA-Z0-9_]{0,8}\/2,[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8}\)/,
   'checkboxes.checkboxStatuses.walls && $&');
 
   //lock icon
-  funcWithRenderWall = assertReplace(funcWithRenderWall,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,\n?128\*[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\)\)/,
+  funcWithRenderWall = assertReplace(funcWithRenderWall,/this\.[$a-zA-Z0-9_]{0,8}\.drawImage\(this\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.canvas,\n?128\*[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8},0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\)\)/,
   'checkboxes.checkboxStatuses.walls && $&');
 
   eval(funcWithRenderWall);
 
   //Sokoban box
-  let funcWithSokoban = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}=function\([$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\)$/,
-  /[$a-zA-Z0-9_]{0,6}\([a-z]\.settings,7\)&&![a-z]&&\([a-z]=new [$a-zA-Z0-9_]{0,6}\([a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.width\*\n?[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}-[a-z]\.x,[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.height\*[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}-\n?[a-z]\.y\),/,
+  let funcWithSokoban = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,8}=function\([$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8}\)$/,
+  /[$a-zA-Z0-9_]{0,8}\([a-z]\.settings,7\)&&![a-z]&&\([a-z]=new [$a-zA-Z0-9_]{0,8}\([a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.width\*\n?[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}-[a-z]\.x,[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.height\*[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}-\n?[a-z]\.y\),/,
   deleteModDebug);
 
   //Sokoban
-  funcWithSokoban = assertReplace(funcWithSokoban,/[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.drawImage\([a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,128,0,128,\n?128,[$a-zA-Z0-9_]{0,6}\.x-[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6}\.y-[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\)/,
+  funcWithSokoban = assertReplace(funcWithSokoban,/[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.drawImage\([a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.canvas,128,0,128,\n?128,[$a-zA-Z0-9_]{0,8}\.x-[$a-zA-Z0-9_]{0,8}\/2,[$a-zA-Z0-9_]{0,8}\.y-[$a-zA-Z0-9_]{0,8}\/2,[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8}\)/,
   'checkboxes.checkboxStatuses.sokobanBox && $&');
 
   //Sokoban
-  funcWithSokoban = assertReplace(funcWithSokoban,/[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.drawImage\([a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,0,0,128,128,[$a-zA-Z0-9_]{0,6}\.x-[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6}\.y-\n?[$a-zA-Z0-9_]{0,6}\/2,[$a-zA-Z0-9_]{0,6},\n?[$a-zA-Z0-9_]{0,6}\)/,
+  funcWithSokoban = assertReplace(funcWithSokoban,/[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.drawImage\([a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.canvas,0,0,128,128,[$a-zA-Z0-9_]{0,8}\.x-[$a-zA-Z0-9_]{0,8}\/2,[$a-zA-Z0-9_]{0,8}\.y-\n?[$a-zA-Z0-9_]{0,8}\/2,[$a-zA-Z0-9_]{0,8},\n?[$a-zA-Z0-9_]{0,8}\)/,
   'checkboxes.checkboxStatuses.sokobanBox && $&');
 
   eval(funcWithSokoban);
 
   //Sokoban goal func
-  let funcWithSokobanGoal = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}=function\(a,b,c,d,e\)$/,
-  /[a-z]\.[$a-zA-Z0-9_]{0,6}\.drawImage\([a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,128\*[a-z],0,128,128,[a-z]\.x-[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/2\+[a-z],[a-z]\.y-[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/2\+[a-z],[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)/,
+  let funcWithSokobanGoal = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,8}=function\(a,b,c,d,e\)$/,
+  /[a-z]\.[$a-zA-Z0-9_]{0,8}\.drawImage\([a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.canvas,128\*[a-z],0,128,128,[a-z]\.x-[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\/2\+[a-z],[a-z]\.y-[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\/2\+[a-z],[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8},[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\)/,
   deleteModDebug);
 
   //Sokoban goal
-  funcWithSokobanGoal = assertReplace(funcWithSokobanGoal,/[a-z]\.[$a-zA-Z0-9_]{0,6}\.drawImage\([a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,128\*[a-z],0,128,128,[a-z]\.x-[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/2\+[a-z],[a-z]\.y-[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/2\+[a-z],[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)/,
+  funcWithSokobanGoal = assertReplace(funcWithSokobanGoal,/[a-z]\.[$a-zA-Z0-9_]{0,8}\.drawImage\([a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.canvas,128\*[a-z],0,128,128,[a-z]\.x-[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\/2\+[a-z],[a-z]\.y-[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\/2\+[a-z],[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8},[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\)/,
   'checkboxes.checkboxStatuses.sokobanGoal && $&');
 
   eval(funcWithSokobanGoal);
 
   //Shadow
-  let funcWithShadow = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}=function\([$a-zA-Z0-9_]{0,6}\)$/,/destination-atop/,deleteModDebug);
+  let funcWithShadow = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,8}=function\([$a-zA-Z0-9_]{0,8}\)$/,/destination-atop/,deleteModDebug);
   
-  funcWithShadow = assertReplace(funcWithShadow,/[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.globalCompositeOperation="destination-atop";/,'if(!checkboxes.checkboxStatuses.shadow){return}$&')
+  funcWithShadow = assertReplace(funcWithShadow,/[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.globalCompositeOperation="destination-atop";/,'if(!checkboxes.checkboxStatuses.shadow){return}$&')
   
   eval(funcWithShadow);
 
   //Normal background (i.e not on infinity)
 
-  let funcWithBackground = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}=function\(a\)$/,
-  /0\);[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.fillRect\(0,0,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas\.width,\n?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas\.height\);/,
+  let funcWithBackground = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,8}=function\(a\)$/,
+  /0\);[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.fillRect\(0,0,[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.canvas\.width,\n?[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.canvas\.height\);/,
   deleteModDebug);
 
-  funcWithBackground = assertReplace(funcWithBackground,/[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.fillRect\(0,0,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas\.width,\n?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas\.height\);/,
+  funcWithBackground = assertReplace(funcWithBackground,/[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.fillRect\(0,0,[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.canvas\.width,\n?[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.canvas\.height\);/,
   'if(checkboxes.checkboxStatuses.lightTiles){$&}');
 
-  funcWithBackground = assertReplace(funcWithBackground,/[a-z]\.[$a-zA-Z0-9_]{0,6}\.fillRect\([a-z]\*[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\*[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)/,
+  funcWithBackground = assertReplace(funcWithBackground,/[a-z]\.[$a-zA-Z0-9_]{0,8}\.fillRect\([a-z]\*[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8},[a-z]\*[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8},[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8},[a-z]\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\)/,
   'checkboxes.checkboxStatuses.darkTiles && $&');
 
   eval(funcWithBackground);
 
-  let funcWithMiscRendering = findFunctionInCode(code,/[$a-zA-Z0-9_]{0,6}\.prototype.render=function\(a,b\)$/,
-    /(?<=0\);)[$a-zA-Z0-9_]{0,6}\.context\.fillRect\(0,0,[$a-zA-Z0-9_]{0,6}\.context\.canvas\.width,[$a-zA-Z0-9_]{0,6}\.context\.canvas\.height\);/,
+  let funcWithMiscRendering = findFunctionInCode(code,/[$a-zA-Z0-9_]{0,8}\.prototype.render=function\(a,b\)$/,
+    /(?<=0\);)[$a-zA-Z0-9_]{0,8}\.context\.fillRect\(0,0,[$a-zA-Z0-9_]{0,8}\.context\.canvas\.width,[$a-zA-Z0-9_]{0,8}\.context\.canvas\.height\);/,
     deleteModDebug);
 
   //Background for infinity is also contained in funcWithFruit
@@ -544,62 +606,62 @@ function processCode(code) {
   'checkboxes.checkboxStatuses.border && $&');
 
   //For light tiles (infinity)
-  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/(?<=0\);)[$a-zA-Z0-9_]{0,6}\.context\.fillRect\(0,0,[$a-zA-Z0-9_]{0,6}\.context\.canvas\.width,[$a-zA-Z0-9_]{0,6}\.context\.canvas\.height\);/,
+  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/(?<=0\);)[$a-zA-Z0-9_]{0,8}\.context\.fillRect\(0,0,[$a-zA-Z0-9_]{0,8}\.context\.canvas\.width,[$a-zA-Z0-9_]{0,8}\.context\.canvas\.height\);/,
   'checkboxes.checkboxStatuses.lightTiles && $&');
 
   //For dark tiles (infinity)
-  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/[$a-zA-Z0-9_]{0,6}\.context\.fillRect\([$a-zA-Z0-9_]{0,6}\*[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}-[$a-zA-Z0-9_]{0,6}\.x\+[$a-zA-Z0-9_]{0,6}\.x,[$a-zA-Z0-9_]{0,6}\*[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}-[$a-zA-Z0-9_]{0,6}\.y\+[$a-zA-Z0-9_]{0,6}\.y,[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\);/,
+  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/[$a-zA-Z0-9_]{0,8}\.context\.fillRect\([$a-zA-Z0-9_]{0,8}\*[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}-[$a-zA-Z0-9_]{0,8}\.x\+[$a-zA-Z0-9_]{0,8}\.x,[$a-zA-Z0-9_]{0,8}\*[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}-[$a-zA-Z0-9_]{0,8}\.y\+[$a-zA-Z0-9_]{0,8}\.y,[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\);/,
   'checkboxes.checkboxStatuses.darkTiles && $&');
 
   //Also has a canvas that we can delete to hide all but shadow
-  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.canvas,\n?[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6}\);if/,
+  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/this\.[$a-zA-Z0-9_]{0,8}\.drawImage\(this\.[$a-zA-Z0-9_]{0,8}\.canvas,\n?[$a-zA-Z0-9_]{0,8},[$a-zA-Z0-9_]{0,8}\);if/,
   'checkboxes.checkboxStatuses.allButShadow && $&');
 
   //all but shadow, but only for infinity
-  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/this\.context\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.canvas,\n?[$a-zA-Z0-9_]{0,6}-[$a-zA-Z0-9_]{0,6},\n?[$a-zA-Z0-9_]{0,6}-[$a-zA-Z0-9_]{0,6}\)}else/,
+  funcWithMiscRendering = assertReplace(funcWithMiscRendering,/this\.context\.drawImage\(this\.[$a-zA-Z0-9_]{0,8}\.canvas,\n?[$a-zA-Z0-9_]{0,8}-[$a-zA-Z0-9_]{0,8},\n?[$a-zA-Z0-9_]{0,8}-[$a-zA-Z0-9_]{0,8}\)}else/,
   'checkboxes.checkboxStatuses.allButShadow && $&');
 
   eval(funcWithMiscRendering);
 
-  let funcWithLockRendering = findFunctionInCode(code,/[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(\)$/,
-  /this\.[$a-zA-Z0-9_]{0,6}.save\(\),this\.[$a-zA-Z0-9_]{0,6}\.translate\([a-z],[a-z]\),this\.[$a-zA-Z0-9_]{0,6}\.rotate\([a-z]\),/,
+  let funcWithLockRendering = findFunctionInCode(code,/[$a-zA-Z0-9_]{0,8}\.prototype\.render=function\(\)$/,
+  /this\.[$a-zA-Z0-9_]{0,8}.save\(\),this\.[$a-zA-Z0-9_]{0,8}\.translate\([a-z],[a-z]\),this\.[$a-zA-Z0-9_]{0,8}\.rotate\([a-z]\),/,
   false);
 
   //background for falling lock piece
-  funcWithLockRendering = assertReplace(funcWithLockRendering,/this\.[$a-zA-Z0-9_]{0,6}\.fillRect\(-\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/2\)\*[$a-zA-Z0-9_]{0,6},-\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/2\)\*[$a-zA-Z0-9_]{0,6},this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\*[$a-zA-Z0-9_]{0,6},\n?this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\*\n?[$a-zA-Z0-9_]{0,6}\)\)/,
+  funcWithLockRendering = assertReplace(funcWithLockRendering,/this\.[$a-zA-Z0-9_]{0,8}\.fillRect\(-\(this\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\/2\)\*[$a-zA-Z0-9_]{0,8},-\(this\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\/2\)\*[$a-zA-Z0-9_]{0,8},this\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\*[$a-zA-Z0-9_]{0,8},\n?this\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\*\n?[$a-zA-Z0-9_]{0,8}\)\)/,
   'checkboxes.checkboxStatuses.walls && $&');
 
   //lock icon and sokoban icon falling
-  funcWithLockRendering = assertReplace(funcWithLockRendering,/(drawImage\(0===[a-z]\.type\?)(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas):\n?(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas)/,
+  funcWithLockRendering = assertReplace(funcWithLockRendering,/(drawImage\(0===[a-z]\.type\?)(this\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.canvas):\n?(this\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.canvas)/,
   '$1 (checkboxes.checkboxStatuses.walls ? $2 : new Image()) : (checkboxes.checkboxStatuses.sokobanBox ? $3 : new Image())');
 
   eval(funcWithLockRendering);
 
-  let funcWithKeyRendering = findFunctionInCode(code,/[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a\)$/,
-  /this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,\n?128\*[a-z]\.type,0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\);/,
+  let funcWithKeyRendering = findFunctionInCode(code,/[$a-zA-Z0-9_]{0,8}\.prototype\.render=function\(a\)$/,
+  /this\.[$a-zA-Z0-9_]{0,8}\.drawImage\(this\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.canvas,\n?128\*[a-z]\.type,0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\);/,
   deleteModDebug);
 
   //keys
-  funcWithKeyRendering = assertReplace(funcWithKeyRendering,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,\n?128\*[a-z]\.type,0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\)/,
+  funcWithKeyRendering = assertReplace(funcWithKeyRendering,/this\.[$a-zA-Z0-9_]{0,8}\.drawImage\(this\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.canvas,\n?128\*[a-z]\.type,0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\)/,
   'checkboxes.checkboxStatuses.keys && $&');
 
   //keys upside down
-  funcWithKeyRendering = assertReplace(funcWithKeyRendering,/this\.[$a-zA-Z0-9_]{0,6}\.drawImage\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.canvas,128\*[a-z]\.type,0,128,128,-\([a-z]\/2\),-\([a-z]\/2\),[a-z],[a-z]\),/,
+  funcWithKeyRendering = assertReplace(funcWithKeyRendering,/this\.[$a-zA-Z0-9_]{0,8}\.drawImage\(this\.[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.canvas,128\*[a-z]\.type,0,128,128,-\([a-z]\/2\),-\([a-z]\/2\),[a-z],[a-z]\),/,
   'checkboxes.checkboxStatuses.keys && $&');
 
   eval(funcWithKeyRendering);
 
-  let funcWithBodyLines = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a,b,c\)$/,
+  let funcWithBodyLines = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,8}\.prototype\.render=function\(a,b,c\)$/,
   /quadraticCurveTo/,
   deleteModDebug);
 
-  funcWithBodyLines = assertReplace(funcWithBodyLines,/this\.[$a-zA-Z0-9_]{0,6}\.fill\(\)\)\)\)/,
+  funcWithBodyLines = assertReplace(funcWithBodyLines,/this\.[$a-zA-Z0-9_]{0,8}\.fill\(\)\)\)\)/,
   '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.lumps) && $&');
 
-  funcWithBodyLines = assertReplaceAll(funcWithBodyLines,/[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.lineTo\([$a-zA-Z0-9_]{0,6}\.x,[$a-zA-Z0-9_]{0,6}\.y\)/g,
+  funcWithBodyLines = assertReplaceAll(funcWithBodyLines,/[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.lineTo\([$a-zA-Z0-9_]{0,8}\.x,[$a-zA-Z0-9_]{0,8}\.y\)/g,
   '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.body) && $&');
 
-  funcWithBodyLines = assertReplaceAll(funcWithBodyLines,/[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.quadraticCurveTo\([$a-zA-Z0-9_]{0,6}\.x,[$a-zA-Z0-9_]{0,6}\.y,[$a-zA-Z0-9_]{0,6}\.x,[$a-zA-Z0-9_]{0,6}\.y\)/g,
+  funcWithBodyLines = assertReplaceAll(funcWithBodyLines,/[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.quadraticCurveTo\([$a-zA-Z0-9_]{0,8}\.x,[$a-zA-Z0-9_]{0,8}\.y,[$a-zA-Z0-9_]{0,8}\.x,[$a-zA-Z0-9_]{0,8}\.y\)/g,
   '(flashSnakeStatus.currentlyFlashingSnake || checkboxes.checkboxStatuses.body) && $&');
 
   //Body scale
@@ -609,23 +671,23 @@ function processCode(code) {
   eval(funcWithBodyLines);
 
   //Portals
-  let funcWithPortals = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a\)$/,
-  /[$a-zA-Z0-9_]{0,6}=new [$a-zA-Z0-9_]{0,6}\([$a-zA-Z0-9_]{0,6}\*Math\.cos\(2\*[$a-zA-Z0-9_]{0,6}\*Math\.PI\),[$a-zA-Z0-9_]{0,6}\*Math\.sin\(2\*[$a-zA-Z0-9_]{0,6}\*Math\.PI\)\);/,
+  let funcWithPortals = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,8}\.prototype\.render=function\(a\)$/,
+  /[$a-zA-Z0-9_]{0,8}=new [$a-zA-Z0-9_]{0,8}\([$a-zA-Z0-9_]{0,8}\*Math\.cos\(2\*[$a-zA-Z0-9_]{0,8}\*Math\.PI\),[$a-zA-Z0-9_]{0,8}\*Math\.sin\(2\*[$a-zA-Z0-9_]{0,8}\*Math\.PI\)\);/,
   deleteModDebug);
 
-  funcWithPortals = assertReplaceAll(funcWithPortals,/[$a-zA-Z0-9_]{0,6}\.fill\(\)/g,
+  funcWithPortals = assertReplaceAll(funcWithPortals,/[$a-zA-Z0-9_]{0,8}\.fill\(\)/g,
   'checkboxes.checkboxStatuses.portals && $&');
 
   eval(funcWithPortals);
 
-  let mainClass = code.match(/([$a-zA-Z0-9_]{0,6})=function\(a,b,c\){this\.settings=[a-z];this\.menu=[a-z];this\.header=[a-z];/)[1];
+  let mainClass = code.match(/([$a-zA-Z0-9_]{0,8})=function\(a,b,c\){this\.settings=[a-z];this\.menu=[a-z];this\.header=[a-z];/)[1];
 
   //For flashing snake body when we eat an apple
-  let funcWithEat = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.tick=function\(\)$/,
-  /if\([$a-zA-Z0-9_]{0,6}\|\|[$a-zA-Z0-9_]{0,6}\){var [$a-zA-Z0-9_]{0,6}=\n?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6};[$a-zA-Z0-9_]{0,6}\|\|\([$a-zA-Z0-9_]{0,6}=\n?!0,[$a-zA-Z0-9_]{0,6}\?[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.play\(\)/,
+  let funcWithEat = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,8}\.tick=function\(\)$/,
+  /if\([$a-zA-Z0-9_]{0,8}\|\|[$a-zA-Z0-9_]{0,8}\){var [$a-zA-Z0-9_]{0,8}=\n?[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8};[$a-zA-Z0-9_]{0,8}\|\|\([$a-zA-Z0-9_]{0,8}=\n?!0,[$a-zA-Z0-9_]{0,8}\?[$a-zA-Z0-9_]{0,8}\.[$a-zA-Z0-9_]{0,8}\.play\(\)/,
   deleteModDebug);
 
-  funcWithEat = assertReplace(funcWithEat,/if\([$a-zA-Z0-9_]{0,6}\|\|[$a-zA-Z0-9_]{0,6}\){/,
+  funcWithEat = assertReplace(funcWithEat,/if\([$a-zA-Z0-9_]{0,8}\|\|[$a-zA-Z0-9_]{0,8}\){/,
   '$& checkboxes.checkboxStatuses.flashSnake && brieflyShowSnake();');
 
   funcWithEat = swapInMainClassPrototype(mainClass, funcWithEat);
@@ -633,7 +695,7 @@ function processCode(code) {
 }
 
 function swapInMainClassPrototype(mainClass, functionText) {
-  functionText = assertReplace(functionText, /^[$a-zA-Z0-9_]{0,6}/,`${mainClass}.prototype`);
+  functionText = assertReplace(functionText, /^[$a-zA-Z0-9_]{0,8}/,`${mainClass}.prototype`);
   return functionText;
 }
 
@@ -644,11 +706,11 @@ code will usually be the snake source code
 
 functionSignature will be regex matching the beginning of the function/method (must end in $),
 for example if we are trying to find a function like s_xD = function(a, b, c, d, e) {......}
-then put functionSignature = /[$a-zA-Z0-9_]{0,6}=function\(a,b,c,d,e\)$/
+then put functionSignature = /[$a-zA-Z0-9_]{0,8}=function\(a,b,c,d,e\)$/
 
 somethingInsideFunction will be regex matching something in the function
 for example if we are trying to find a function like s_xD = function(a, b, c, d, e) {...a.Xa&&10!==a.Qb...}
-then put somethingInsideFunction = /a\.[$a-zA-Z0-9_]{0,6}&&10!==a\.[$a-zA-Z0-9_]{0,6}/
+then put somethingInsideFunction = /a\.[$a-zA-Z0-9_]{0,8}&&10!==a\.[$a-zA-Z0-9_]{0,8}/
 */
 function findFunctionInCode(code, functionSignature, somethingInsideFunction, logging = false) {
   let functionSignatureSource = functionSignature.source;
