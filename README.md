@@ -2,7 +2,9 @@
 
 To install:
 
-Import bookmark from the releases, then go to google snake and click on the bookmark.
+This has moved. It is now part of Google Snake Modloader. Please see [here](https://github.com/DarkSnakeGang/GoogleSnakeModLoader/blob/main/README.md) for install instructions. It has been renamed to visibility mod.
+
+~~Import bookmark from the releases, then go to google snake and click on the bookmark.~~
 
 <hr>
 
