@@ -42,7 +42,7 @@ window.VisibilityMod.runCodeBefore = function () {
   console.log("Enabling Visibility Mod");
 
   window.checkboxes = {
-    checkboxStatuses: { leftEye: true, rightEye: true, body: true, snoot: true, lightTiles: true, darkTiles: true, eatAnimation: true, fruit: true, shadow: true, border: true, die: true, lumps: true, portals: true, flashSnake: false, allButShadow: true, keys: true, walls: true, sokobanBox: true, sokobanGoal: true },
+    checkboxStatuses: { leftEye: true, rightEye: true, body: true, snoot: true, lightTiles: true, darkTiles: true, eatAnimation: true, fruit: true, shadow: true, border: true, die: true, lumps: true, portals: true, flashSnake: false, allButShadow: true, keys: true, walls: true, sokobanBox: true, sokobanGoal: true, mines: true, statue: true, brokenStatue: true, mineRadius: true },
   };
 
   window.flashSnakeStatus = { flashCount: 0, currentlyFlashingSnake: false, durationMillisecond: 1000 };
@@ -187,6 +187,24 @@ window.VisibilityMod.runCodeBefore = function () {
     document.getElementById('sokoban-goal').onchange = function () {
       window.checkboxes.checkboxStatuses.sokobanGoal = this.checked;
     }
+    document.getElementById('mines').onchange = function () {
+      window.checkboxes.checkboxStatuses.mines = this.checked;
+      if (this.checked) {
+        eval("window.MinesRef." + window.minesDefined + "=window.DefaultMines;")
+      }
+      else {
+        eval("window.MinesRef." + window.minesDefined + "=window.NoMines;")
+      }
+    }
+    document.getElementById('mine-radius').onchange = function () {
+      window.checkboxes.checkboxStatuses.mineRadius = this.checked;
+    }
+    document.getElementById('broken-statue').onchange = function () {
+      window.checkboxes.checkboxStatuses.brokenStatue = this.checked;
+    }
+    document.getElementById('statue').onchange = function () {
+      window.checkboxes.checkboxStatuses.statue = this.checked;
+    }
     document.getElementById('spin').onchange = spinHandler;
   }
 
@@ -256,7 +274,7 @@ window.VisibilityMod.runCodeBefore = function () {
               <label><input id="border" type="checkbox" checked>Border</label>
             </li>
             <li>
-              <label><input id="spin" type="checkbox">???</label>
+              <label><input id="spin" type="checkbox">Spin</label>
             </li>
           </ul>
         </div>
@@ -274,8 +292,11 @@ window.VisibilityMod.runCodeBefore = function () {
               <label><input id="keys" type="checkbox" checked>Keys</label>
             </li>
             <li>
-            <label><input id="keys" type="checkbox" checked disabled>Mines</label>
-          </li>
+            <label><input id="statue" type="checkbox" checked>Statue</label>
+            </li>
+            <li>
+              <label><input id="mines" type="checkbox" checked>Mines</label>
+            </li>
           </ul>
         </div>
         <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 50%;display:inline-block;float:right;">
@@ -290,7 +311,10 @@ window.VisibilityMod.runCodeBefore = function () {
               <label><input id="sokoban-goal" type="checkbox" checked>Sokoban goal</label>
             </li>
             <li>
-              <label><input id="sokoban-goal" type="checkbox" checked disabled>Statue</label>
+              <label><input id="broken-statue" type="checkbox" checked>Statue Cracks</label>
+            </li>
+            <li>
+              <label><input id="mine-radius" type="checkbox" checked>Mine Radius</label>
             </li>
           </ul>
         </div>
@@ -386,6 +410,11 @@ window.VisibilityMod.runCodeBefore = function () {
       'sokoban-box': "The box that can be found in the mode where you push around a box into a goal.",
       'sokoban-goal': "The goal that can be found in the mode where you push around a box into a goal.",
       'flash-snake': "When this setting is turned on, the snake will briefly show whenever a fruit is eaten. The amount of time it shows for is controlled by the Flash Time setting. This only has a noticable effect if parts of the snake are hidden to begin with.",
+      'mines': "The mines (flags) in minesweeper mode.",
+      'statue': "The statue in statue mode. Including broken statue.",
+      'broken-statue': "The broken statues in statue mode.",
+      'spin': "Spin the entire board.",
+      'mine-radius': "The mine's radius in minesweeper mode. Dashed lines.",
     };
 
     for (let inputElementId in tooltipText) {
@@ -783,8 +812,6 @@ Same as replace, but throws an error if nothing is changed
   funcWithBackground = assertReplace(funcWithBackground, /[a-z]\.[$a-zA-Z0-9_]{0,6}\.fillRect\([a-z]\*[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\*[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\)/,
     'window.checkboxes.checkboxStatuses.darkTiles && $&');
 
-
-
   //eval(funcWithBackground);
 
   let funcWithMiscRendering_Origin = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype.render=function\(a,b\)$/,
@@ -893,7 +920,7 @@ Same as replace, but throws an error if nothing is changed
 
   //eval(funcWithPortals);
 
-  let mainClass = code.match(/([$a-zA-Z0-9_]{0,6})=function\(a,b,c\){this\.settings=[a-z];this\.menu=[a-z];this\.header=[a-z];/)[1];
+  //let mainClass = code.match(/([$a-zA-Z0-9_]{0,6})=function\(a,b,c\){this\.settings=[a-z];this\.menu=[a-z];this\.header=[a-z];/)[1];
 
   //For flashing snake body when we eat an apple
   let funcWithEat_Origin = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.tick=function\(\)$/,
@@ -909,7 +936,66 @@ Same as replace, but throws an error if nothing is changed
 
   //funcWithEat = swapInMainClassPrototype(mainClass, funcWithEat);
   //eval(funcWithEat);
-  
+
+    // Mines
+    /*
+  let funcWithMines_Origin = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a\)$/,
+    /7/,
+    deleteModDebug);
+
+  let funcWithMines = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a\)$/,
+    /7/,
+    deleteModDebug);
+
+    funcWithMines = assertReplaceAll(funcWithMines, /a.Aa.drawImage\(a.oa.canvas,0,a.ka.ka.ka\/6\)/g,
+    'window.checkboxes.checkboxStatuses.mines && $&');
+*/
+
+    // Statue Cracks
+  code = code.assertReplace(/[a-z].[$a-zA-Z0-9_]{0,6}.drawImage\([a-z]\.[$a-zA-Z0-9_]{0,6}.[$a-zA-Z0-9_]{0,6}\(\),[a-z]\.[$a-zA-Z0-9_]{0,6}\*[a-z],0,[a-z],[a-z],-[a-z]\/2,-[a-z]\/2,[a-z],[a-z]\),[a-z]\.[$a-zA-Z0-9_]{0,6}\.globalAlpha=[a-z]\)/g,
+     'window.checkboxes.checkboxStatuses.brokenStatue && $&')
+     
+     // Statue (including cracks)
+  code = code.assertReplace(/[$a-zA-Z0-9_]{0,6}\(this,[a-z],[a-z],[a-z]\.[$a-zA-Z0-9_]{0,6}\.angle,[a-z]\.[$a-zA-Z0-9_]{0,6}\)/g,
+     `window.checkboxes.checkboxStatuses.statue && $&`)
+    
+
+
+  minesDefinition_Origin = code.match(/this\.[a-zA-Z0-9_$]{1,8}=new [a-zA-Z0-9_$]{1,8}\(this.[a-zA-Z0-9_$]{1,8},"snake_arcade\/mine\.png\",10,this\.[a-zA-Z0-9_$]{1,8},"snake_arcade\/pixel\/px_mine\.png\"\)/g)[0]
+
+  window.minesDefined = minesDefinition_Origin.split('=')[0].split('.')[1]
+  window.minesEmptySrc = 'https://i.postimg.cc/LhKWc2Wb/Empty.png'
+  minesDefinition_NewCode = `${minesDefinition_Origin};
+    window.MinesRef=this;
+    window.DefaultMines=${minesDefinition_Origin}
+    window.NoMines=${minesDefinition_Origin.split('=')[1].split('"')[0]} "${window.minesEmptySrc}" ${minesDefinition_Origin.split('"')[2]} "${window.minesEmptySrc}" ${minesDefinition_Origin.split('"')[4]}
+    `
+
+/*
+  mineRadiusWidth_Origin = code.match(/[a-z]\.[$a-zA-Z0-9_]{0,6}\.lineWidth=[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/12;/)[0]
+  mineRadiusWidth = mineRadiusWidth_Origin;
+
+  mineRadiusWidth_Code = `
+  if(window.checkboxes.checkboxStatuses.mineRadius) {
+    ${mineRadiusWidth_Origin}
+  }
+  else {
+    ${mineRadiusWidth_Origin.split('=')[0]}=0;
+  }
+  `
+  */
+// Mine Radius
+
+code = code.assertReplace(/[$a-zA-Z0-9_]{0,6}\([a-z],d,0,0,[a-z]\);if\([$a-zA-Z0-9_]{0,6}\([a-z].[$a-zA-Z0-9_]{0,8},4\)\)for\(var/g,
+`window.checkboxes.checkboxStatuses.mineRadius && $&`)
+  //code = code.assertReplace(/[a-z]\.[$a-zA-Z0-9_]{0,6}\.setLineDash\(\[[a-z].[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/4,[a-z]\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\/4\]\)/g,
+   // `window.checkboxes.checkboxStatuses.mineRadius && $&`)
+
+  //code = code.assertReplace(/[$a-zA-Z0-9_]{0,6}\(this,[a-z],[a-z],[a-z]\.[$a-zA-Z0-9_]{0,6}\.angle,[a-z]\.[$a-zA-Z0-9_]{0,6}\)/g,
+  //   `window.checkboxes.checkboxStatuses.mines && $&`)
+
+  //code = code.assertReplace(mineRadiusWidth_Origin, mineRadiusWidth_Code)
+  code = code.assertReplace(minesDefinition_Origin, minesDefinition_NewCode)
   code = code.assertReplace(funcWithFruit_Origin, funcWithFruit)
   code = code.assertReplace(funcWithBodyParts_Origin, funcWithBodyParts)
   code = code.assertReplace(funcWithRenderWall_Origin, funcWithRenderWall)
@@ -924,7 +1010,7 @@ Same as replace, but throws an error if nothing is changed
   code = code.assertReplace(funcWithPortals_Origin, funcWithPortals)
   code = code.assertReplace(funcWithEat_Origin, funcWithEat)
 
-  //console.log(code)
+  console.log(code)
   
   return code;
 }
