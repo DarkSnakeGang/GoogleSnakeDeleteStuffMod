@@ -1010,7 +1010,15 @@ code = code.assertReplace(/[$a-zA-Z0-9_]{0,6}\([a-z],d,0,0,[a-z]\);if\([$a-zA-Z0
   code = code.assertReplace(funcWithPortals_Origin, funcWithPortals)
   code = code.assertReplace(funcWithEat_Origin, funcWithEat)
 
-  console.log(code)
+  // Disables statue break animation
+  code = code.assertReplace(/[$a-zA-Z0-9_]{0,6}\(this\.[$a-zA-Z0-9_]{0,6},[a-z],new _\.[$a-zA-Z0-9_]{0,6}\([a-z],[a-z]\),[a-z],[a-z]\.[$a-zA-Z0-9_]{0,6}\)/g,
+     `window.checkboxes.checkboxStatuses.statue && $&`)
+
+  // Disable minesweeper break animation
+  code = code.assertReplace(/[a-z]=_\.[$a-zA-Z0-9_]{0,6}\(this\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\);for\([a-z]=a.next\(\);/,
+  `$& window.checkboxes.checkboxStatuses.mineRadius &&`)
+
+  //console.log(code)
   
   return code;
 }
