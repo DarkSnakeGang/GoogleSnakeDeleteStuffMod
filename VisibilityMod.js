@@ -844,7 +844,7 @@ Same as replace, but throws an error if nothing is changed
     'window.checkboxes.checkboxStatuses.allButShadow && $&');
 
   //eval(funcWithMiscRendering);
-
+  
   let funcWithLockRendering_Origin = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(\)$/,
     /this\.[$a-zA-Z0-9_]{0,6}.save\(\),this\.[$a-zA-Z0-9_]{0,6}\.translate\([a-z],[a-z]\),this\.[$a-zA-Z0-9_]{0,6}\.rotate\([a-z]\),/,
     false);
@@ -882,7 +882,7 @@ Same as replace, but throws an error if nothing is changed
 
 
   //eval(funcWithKeyRendering);
-
+  
   let funcWithBodyLines_Origin = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a,b,c\)$/,
     /quadraticCurveTo/,
     deleteModDebug);
@@ -890,7 +890,11 @@ Same as replace, but throws an error if nothing is changed
     /quadraticCurveTo/,
     deleteModDebug);
 
-  funcWithBodyLines = assertReplace(funcWithBodyLines, /this\.[$a-zA-Z0-9_]{0,6}\.fill\(\)\)\)\)/,
+if(window.NepDebug){
+  console.log(funcWithBodyLines)
+}
+debugger
+  funcWithBodyLines = assertReplace(funcWithBodyLines, /this\.[$a-zA-Z0-9_]{0,6}\.fill\(\)\)/,
     '(window.flashSnakeStatus.currentlyFlashingSnake || window.checkboxes.checkboxStatuses.lumps) && $&');
 
   funcWithBodyLines = assertReplaceAll(funcWithBodyLines, /[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}\.lineTo\([$a-zA-Z0-9_]{0,6}\.x,[$a-zA-Z0-9_]{0,6}\.y\)/g,
