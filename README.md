@@ -1,4 +1,4 @@
-<h1>Delete Stuff Mod</h1>
+<h1>Visibility Mod</h1>
 
 To install:
 
