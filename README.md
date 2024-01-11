@@ -16,6 +16,5 @@ You can reposition the mod by dragging the top left.
 <br>
 <hr>
 <br>
-<img src="https://cdn.discordapp.com/attachments/307629429126070283/926242262114009198/unknown.png">
+<img src="https://static.wikia.nocookie.net/google-snake-game/images/3/3e/Visimod.png/revision/latest?cb=20230718153856">
 <br>
-<img src="https://cdn.discordapp.com/attachments/866443373081526293/923966801283543081/unknown.png">
