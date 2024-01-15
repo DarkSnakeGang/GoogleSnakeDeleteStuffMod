@@ -936,6 +936,10 @@ window.TimeKeeper.make = function () {
     window.timeKeeper.debug = false;
     //called on every apple
     window.timeKeeper.gotApple = function (time, score) {
+        debugger
+        if (window.pudding_settings.randomizeThemeApple) {
+            window.setTheme(window.getRandomThemeName());
+        }
         if (window.timeKeeper.debug) {
             //console.log("got Apple %s, %s", time, score);
         }
@@ -2352,7 +2356,8 @@ window.SettingsSaver.make = function () {
                 SpeedInfo: false,
                 PortalPairs: false,
                 SelectedPairs: [0, 1, 2, 3, 4, 5],
-                DisableRandom: false
+                DisableRandom: false,
+                randomizeThemeApple: false
             };
 
             }
@@ -2373,7 +2378,8 @@ window.SettingsSaver.make = function () {
         typeof pudding_settings.TopBar !== 'undefined' &&
         typeof pudding_settings.SpeedInfo !== 'undefined' &&
         typeof pudding_settings.PortalPairs !== 'undefined' &&
-        typeof pudding_settings.DisableRandom !== 'undefined'
+        typeof pudding_settings.DisableRandom !== 'undefined' &&
+        typeof pudding_settings.randomizeThemeApple !== 'undefined'
         ) {
             localStorage.setItem('PuddingSettings', JSON.stringify(pudding_settings));
         }
@@ -4237,6 +4243,10 @@ window.BootstrapMenu.make = function () {
     <label class="form-check-label" for="RemoveScrollbar" style="margin:3px;color:white;font-family:Roboto,Arial,sans-serif;">Remove Scrollbar</label>
     </div>
     <div class="form-check form-check-inline">
+    <input class="form-check-input" type="checkbox" role="switch" id="EatThemeRandomizer">
+    <label class="form-check-label" for="EatThemeRandomizer" style="margin:3px;color:white;font-family:Roboto,Arial,sans-serif;" id="EatThemeRandomizer2">"Dragon Fruit"</label>
+    </div>
+    <div class="form-check form-check-inline">
     <input class="form-check-input" type="checkbox" role="switch" id="PortalPairs">
     <label class="form-check-label" for="PortalPairs" style="margin:3px;color:white;font-family:Roboto,Arial,sans-serif;">Custom Portal Pairs</label>
     </div>
@@ -4279,6 +4289,14 @@ window.BootstrapMenu.make = function () {
 
         ScrollLeftBtn = document.getElementById("ScrollLeftBtn");
         ScrollLeftBtn.style.display = 'none';
+
+        EatThemeRandomizer = document.getElementById("EatThemeRandomizer");
+        EatThemeRandomizer2 = document.getElementById("EatThemeRandomizer2");
+        EatThemeRandomizer.checked = window.pudding_settings.randomizeThemeApple;
+        EatThemeRandomizer.addEventListener("change", function() {
+            window.pudding_settings.randomizeThemeApple = !window.pudding_settings.randomizeThemeApple;
+        });
+
 
         skull_checkbox = document.getElementById("SkullPoisonFruit");
         skull_checkbox.checked = window.pudding_settings.Skull;
@@ -4327,6 +4345,13 @@ window.BootstrapMenu.make = function () {
             document.body.style.overflow = '';
         }
 
+        if (localStorage.getItem('snakeChosenMod') === "PuddingMod") {
+            EatThemeRandomizer.style.display = 'none';
+            EatThemeRandomizer2.style.display = 'none';
+            EatThemeRandomizer.checked = false;
+            window.pudding_settings.randomizeThemeApple = false;
+        }
+
         if (localStorage.getItem('snakeChosenMod') === "MorePudding" || localStorage.getItem('snakeChosenMod') === "VisibilityMod" || window.isSnakeMobileVersion) {
             console.log("Detected MorePudding or VisibilityMod or mobile - disabling SpeedInfo")
             speedinfo_checkbox.disabled = true;
@@ -4339,7 +4364,6 @@ window.BootstrapMenu.make = function () {
                     document.documentElement.scrollLeft -= 800;
                 });
             }
-
         }
         let settingsToValues = {
             inputs: {
@@ -4708,11 +4732,18 @@ window.CustomPortalPairs.alterCode = function (code) {
     counter_reset_code = `window.custom_pair_call_counter = 0;this.reset();`
 
     code = code.assertReplace(reset_regex, counter_reset_code);
-
-    portal_pairs_regex = new RegExp(/this\.[a-zA-Z0-9_$]{1,8}\[c\]\.[a-zA-Z0-9_$]{1,8}=[a-zA-Z0-9_$]{1,8}\(this\)/)
+    portal_pairs_regex = new RegExp(/this\.[a-zA-Z0-9_$]{1,8}\[[a-zA-Z0-9_$]{1,8}\]\.[a-zA-Z0-9_$]{1,8}=[a-zA-Z0-9_$]{1,8}\(this\)/)
+    catchError(portal_pairs_regex, code) // Third {1,8} here should be "type" - since this is where portal pair type is determined
     apple_array = code.match(portal_pairs_regex)[0].split('.')[1].split('[')[0]
     give_portal_type_func = code.match(portal_pairs_regex)[0].split('=')[1]
     apple_type = code.match(portal_pairs_regex)[0].split('.')[2].split('=')[0]
+    apple_index = code.match(portal_pairs_regex)[0].split('[')[1].split(']')[0]
+    if (window.NepDebug) {
+
+        console.log("Apple array: " + apple_array)
+        console.log("portal type func: " + give_portal_type_func)
+        console.log("apple type: " + apple_type)
+    }
 
     window.give_custom_pair = function () {
         window.custom_pair_call_counter = window.custom_pair_call_counter + 1;
@@ -4723,9 +4754,9 @@ window.CustomPortalPairs.alterCode = function (code) {
     }
 
     portal_pairs_code = `
-    if(window.pudding_settings.PortalPairs){this.${apple_array}[c].${apple_type} = window.give_custom_pair();
-    this.${apple_array}[c+1].${apple_type} = this.${apple_array}[c].${apple_type};}
-    else this.${apple_array}[c].${apple_type} = ${give_portal_type_func}
+    if(window.pudding_settings.PortalPairs){this.${apple_array}[${apple_index}].${apple_type} = window.give_custom_pair();
+    this.${apple_array}[${apple_index}+1].${apple_type} = this.${apple_array}[${apple_index}].${apple_type};}
+    else this.${apple_array}[${apple_index}].${apple_type} = ${give_portal_type_func}
     `
 
     code = code.assertReplace(portal_pairs_regex, portal_pairs_code);
@@ -4739,8 +4770,10 @@ window.CustomPortalPairs.alterCode = function (code) {
     }
 
     portal_dice_regex = new RegExp(/if\([a-zA-Z0-9_$]{1,8}\(this\.[a-zA-Z0-9_$]{1,8},2\)&&0<[a-zA-Z0-9_$]{1,8}\.length\)\{/)
+    catchError(portal_dice_regex, code)
     apple_dice_array = code.match(portal_dice_regex)[0].split('<')[1].split('.')[0];
     portal_dice_full_regex = new RegExp(/if\([a-zA-Z0-9_$]{1,8}\(this\.[a-zA-Z0-9_$]{1,8},2\)&&0<[a-zA-Z0-9_$]{1,8}\.length\)\{[^]*type}/gm)
+    catchError(portal_dice_full_regex, code)
     portal_pairs_dice_code = code.match(portal_dice_full_regex)[0]
 
     portal_dice_pairs_code = `
@@ -5398,93 +5431,6 @@ window.VisibilityMod.alterSnakeCode = function (code) {
     console.log(code)
   }
   window.snakeScale = { tailStart: 1, tailEnd: 1, face: 1, eyes: 1 };
-
-  /*
-  This function will search for a function/method in some code and return this function as a string
-  
-  code will usually be the snake source code
-  
-  functionSignature will be regex matching the beginning of the function/method (must end in $),
-  for example if we are trying to find a function like s_xD = function(a, b, c, d, e) {......}
-  then put functionSignature = /[$a-zA-Z0-9_]{0,6}=function\(a,b,c,d,e\)$/
-  
-  somethingInsideFunction will be regex matching something in the function
-  for example if we are trying to find a function like s_xD = function(a, b, c, d, e) {...a.Xa&&10!==a.Qb...}
-  then put somethingInsideFunction = /a\.[$a-zA-Z0-9_]{0,6}&&10!==a\.[$a-zA-Z0-9_]{0,6}/
-  */
-  function findFunctionInCode(code, functionSignature, somethingInsideFunction, logging = false) {
-    let functionSignatureSource = functionSignature.source;
-    let functionSignatureFlags = functionSignature.flags;//Probably empty string
-
-    /*Check functionSignature ends in $*/
-    if (functionSignatureSource[functionSignatureSource.length - 1] !== "$") {
-      throw new Error("functionSignature regex should end in $");
-    }
-
-    /*Allow line breaks after commas or =. This is bit sketchy, but should be ok as findFunctionInCode is used in a quite limited way*/
-    functionSignatureSource.replaceAll(/,|=/g, '$&\\n?');
-    functionSignature = new RegExp(functionSignatureSource, functionSignatureFlags);
-
-    /*get the position of somethingInsideFunction*/
-    let indexWithinFunction = code.search(somethingInsideFunction);
-    if (indexWithinFunction == -1) {
-      console.log("%cCouldn't find a match for " + somethingInsideFunction, "color:red;");
-      diagnoseRegexError(code, somethingInsideFunction);
-    }
-
-    /*expand outwards from somethingInsideFunction until we get to the function signature, then count brackets
-    to find the end of the function*/
-    startIndex = 0;
-    for (let i = indexWithinFunction; i >= 0; i--) {
-      let startOfCode = code.substring(0, i);
-      startIndex = startOfCode.search(functionSignature);
-      if (startIndex !== -1) {
-        break;
-      }
-      if (i == 0) {
-        throw new Error("Couldn't find function signature");
-      }
-    }
-
-    let bracketCount = 0;
-    let foundFirstBracket = false;
-    let endIndex = 0;
-    /*Use bracket counting to find the whole function*/
-    let codeLength = code.length;
-    for (let i = startIndex; i <= codeLength; i++) {
-      if (!foundFirstBracket && code[i] == "{") {
-        foundFirstBracket = true;
-      }
-
-      if (code[i] == "{") {
-        bracketCount++;
-      }
-      if (code[i] == "}") {
-        bracketCount--;
-      }
-      if (foundFirstBracket && bracketCount == 0) {
-        endIndex = i;
-        break;
-      }
-
-      if (i == codeLength) {
-        throw new Error("Couldn't pair up brackets");
-      }
-    }
-
-    let fullFunction = code.substring(startIndex, endIndex + 1);
-
-    /*throw error if fullFunction doesn't contain something inside function - i.e. function signature was wrong*/
-    if (fullFunction.search(somethingInsideFunction) === -1) {
-      throw new Error("Function signature does not belong to the same function as somethingInsideFunction");
-    }
-
-    if (logging) {
-      console.log(fullFunction);
-    }
-
-    return fullFunction;
-  }
 
   /*
 Same as replace, but throws an error if nothing is changed
