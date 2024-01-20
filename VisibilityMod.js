@@ -4934,7 +4934,6 @@ window.PuddingMod.alterSnakeCode = function (code) {
   code = code.replaceAll(/\$\$/gm, `doubleD`)
   code = code.replaceAll(/\$\&/gm, `$ &`)
 
-
   //code = code.assertReplaceAll(/\$i/gm, `something_i`)
 
   window.Libraries.forEach(LibName => {
@@ -4942,30 +4941,6 @@ window.PuddingMod.alterSnakeCode = function (code) {
     eval("code = window." + LibName + ".alterCode(code);")
   });
 
-  /*
-  twin_all_global = `window.snake.twinAll`
-
-  all_regex = new RegExp(/\"ALL\"\);/);
-  window.catchError(all_regex, code)
-  add_direction = `"ALL");
-  ${twin_all_global}=true;
-  `
-
-  timer_update_regex = new RegExp(/&"NONE"!==this\.[a-zA-Z0-9_$]{1,8}\.[a-zA-Z0-9_$]{1,8}\.direction/);
-  if (!window.catchError(timer_update_regex, code)) {
-
-    ka_oa_fill = code.match(timer_update_regex)[0].split('.')[1] + '.' + code.match(timer_update_regex)[0].split('.')[2]
-    twin_timer_update = `&("NONE"!==this.${ka_oa_fill}.direction||${twin_all_global})`
-    reset_regex = new RegExp(/;this\.reset\(\)/)
-    set_twinall = `${twin_all_global}=false;`
-    code = code.assertReplace(reset_regex, ";" + set_twinall + "this.reset()");
-    code = code.assertReplace(all_regex, add_direction)
-    code = code.assertReplace(timer_update_regex, twin_timer_update)
-    console.log("Fixing Twin All Timer");
-  } else {
-    console.log("Twin All Timer Seems Already Fixed!");
-  }
-  */
   console.log("Done, enjoy Pudding Mod!");
 
   if (window.NepDebug) {
@@ -5203,7 +5178,7 @@ window.VisibilityModCode.runCodeBefore = function () {
     let initialHtml =
       `<div id="delete-stuff-popup" style="margin:0px;position:fixed;z-index:9001;width:100%;">
   <div id="delete-stuff-draggable" style="width: 320px; background-color: rgb(87, 138, 52); z-index: 9002; border-color: rgb(87, 138, 52); border-style: solid; border-width: 4px; border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.4) 0px 3px 10px; position: fixed; left: 5px; top: 5px;">
-    <div id="drag-handle" style="width: 22px; height: 22px; background-color: rgb(77, 193, 249); position: absolute; border-top-left-radius: 4px; border-bottom-right-radius: 18px; border-right: 3px solid rgb(74, 117, 44); border-bottom: 3px solid rgb(74, 117, 44); cursor: move; border-top-color: rgb(74, 117, 44); border-left-color: rgb(74, 117, 44);"></div>
+    <div id="drag-handle" style="width: 22px; height: 22px; background-color: rgb(77, 193, 249); position: absolute; border-top-left-radius: 4px; border-bottom-right-radius: 18px; border-right: 3px solid rgb(87, 138, 52); border-bottom: 3px solid rgb(87, 138, 52); cursor: move; border-top-color: rgb(87, 138, 52); border-left-color: rgb(87, 138, 52);"></div>
     <div style="padding:10px;width:300px;margin:0;">
       <div id="visi-title" class="form-check-label" style="text-align: center; padding: 5px; background-color: rgb(74, 117, 44); color: white; font-size: 20px;">Visibility Mod</div>
       <div id="visi-boxes" style="background-color: rgb(74, 117, 44); margin-top: 5px; padding: 0px 0px 10px;">
