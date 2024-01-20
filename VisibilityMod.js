@@ -429,6 +429,8 @@ window.Theme.alterCode = function (code) {
 
       document.getElementById('visi-title').style.backgroundColor = real_top_bar;
       document.getElementById('visi-boxes').style.backgroundColor = real_top_bar;
+      document.getElementById('flash-snake-timing').style.backgroundColor = buttons_color;
+
     }
 
 
@@ -5301,16 +5303,16 @@ window.VisibilityMod.runCodeBefore = function () {
         </div>
         <hr style="clear:both;width:90%;margin-bottom:0">
         <!--Flash Section-->
-        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 55%;display:inline-block;float:left">
+        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 45%;display:inline-block;float:left">
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
             <li>
-              <label class="form-check-label"><input class="form-check-input" id="flash-snake" type="checkbox">Flash on eat</label>
+              <label class="form-check-label"><input class="form-check-input" id="flash-snake" type="checkbox">Flash eat</label>
             </li>  
           </ul>
         </div>
-        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 45%;display:inline-block;float:right;">
-          <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
-            <li><select id="flash-snake-timing" class="form-control" style="margin:3px;background-color:#1155CC;color:white;font-family:Roboto,Arial,sans-serif;display:flex; justify-content: center; align-items: center; text-align: center;">
+        <div style="box-sizing: border-box;padding:2px;margin: 0px;width: 55%;display:inline-block;">
+          <label class="form-check-label" style="padding:5px;display:inline-block;float:left;">Flash time:</label>
+            <select id="flash-snake-timing" style="margin-top: 9px; margin-right: 10px;background-color:#1155CC;color:white;font-family:Roboto,Arial,sans-serif;display:flex; justify-content: space-evenly; align-items: center; text-align: center;border-radius:0.375rem;float:right;">
               <option value="20">0.05s</option>
               <option value="200">0.2s</option>
               <option value="500">0.5s</option>
@@ -5318,8 +5320,6 @@ window.VisibilityMod.runCodeBefore = function () {
               <option value="2000">2s</option>
               <option value="3000">3s</option>
             </select> 
-            </li>
-          </ul>
         </div>
         <!--End test area-->
         <div style="text-align:center; clear:both" class="form-check-label"><a id="delete-stuff-close" href="#">Close</a> (Press i to show again)</div>
