@@ -10,7 +10,6 @@ visi_init = open("VisibilityInit.js", "r", encoding='utf-8')
 pudding = open("PuddingMod.js", "r", encoding='utf-8')
 combiner = open("VisiPudding.js", "r", encoding='utf-8')
 
-
 visi_file.write(pudding.read())
 visi_file.write(visi_init.read())
 visi_file.write(combiner.read())

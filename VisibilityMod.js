@@ -425,7 +425,7 @@ window.Theme.alterCode = function (code) {
       document.getElementById('delete-stuff-draggable').style.backgroundColor = border;
       document.getElementById('delete-stuff-draggable').style.borderColor = border;
 
-      document.getElementById('drag-handle').style.borderColor = real_top_bar;
+      document.getElementById('drag-handle').style.borderColor = border;
 
       document.getElementById('visi-title').style.backgroundColor = real_top_bar;
       document.getElementById('visi-boxes').style.backgroundColor = real_top_bar;
@@ -5319,7 +5319,7 @@ window.VisibilityModCode.runCodeBefore = function () {
           </ul>
         </div>
         <div style="box-sizing: border-box;padding:2px;margin: 0px;width: 55%;display:inline-block;">
-          <label class="form-check-label" style="padding:5px;display:inline-block;float:left;">Flash time:</label>
+          <label class="form-check-label" style="padding-top:5px;display:inline-block;float:left;">Flash time:</label>
             <select id="flash-snake-timing" style="margin-top: 9px; margin-right: 10px;background-color:#1155CC;color:white;font-family:Roboto,Arial,sans-serif;display:flex; justify-content: space-evenly; align-items: center; text-align: center;border-radius:0.375rem;float:right;">
               <option value="20">0.05s</option>
               <option value="200">0.2s</option>
