@@ -5290,7 +5290,7 @@ window.VisibilityModCode.runCodeBefore = function () {
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
             <li>
               <label class="form-check-label"><input class="form-check-input" id="flash-snake" type="checkbox">Flash eat</label>
-            </li>  
+            </li>
           </ul>
         </div>
         <div style="box-sizing: border-box;padding:2px;margin: 0px;width: 55%;display:inline-block;">
@@ -5302,7 +5302,7 @@ window.VisibilityModCode.runCodeBefore = function () {
               <option value="1000" selected="">1s</option>
               <option value="2000">2s</option>
               <option value="3000">3s</option>
-            </select> 
+            </select>
         </div>
         <!--End test area-->
         <div style="text-align:center; clear:both" class="form-check-label"><a id="delete-stuff-close" href="#">Close</a> (Press i to show again)</div>
@@ -5335,10 +5335,10 @@ window.VisibilityModCode.runCodeBefore = function () {
     customStyle.innerHTML = `.tooltip:hover .tooltiptext:not(:hover){visibility:visible!important;opacity:1!important;}
   #drag-handle:hover{background-color:rgb(17, 85, 204)!important;}
   #delete-stuff-popup label,#delete-stuff-popup div{user-select:none;}
-  
+
   :root {--rotation-period: 30s;}
   .cer0Bd[data-spin='true']{animation: spin var(--rotation-period) linear infinite;}
-  .cer0Bd[data-spin='x']{animation: spinx var(--rotation-period) linear infinite;} 
+  .cer0Bd[data-spin='x']{animation: spinx var(--rotation-period) linear infinite;}
   @keyframes spin { 100% { transform:rotate(360deg); } }
   @keyframes spinx { 100% { transform:rotateX(360deg); } }
   `;
@@ -5419,7 +5419,7 @@ window.VisibilityModCode.runCodeBefore = function () {
 ////////////////////////////////////////////////////////////////////
 
 window.VisibilityModCode.alterSnakeCode = function (code) {
-  
+
   //code = window.PuddingMod.alterSnakeCode(code);
 
   let deleteModDebug = false;
@@ -5595,12 +5595,12 @@ Same as replace, but throws an error if nothing is changed
   //Fruit
   funcWithFruit = assertReplace(funcWithFruit, fruitRegex,
     'window.checkboxes.checkboxStatuses.fruit && $&');
-    
+
  // Poison mode fruit is broken
   //Poison mode fruit disappearing animation
   funcWithFruit = assertReplace(funcWithFruit, /this\.[$a-zA-Z0-9_]{0,6}\.drawImage\([a-z],\n?0,\n?0,\n?[$a-zA-Z0-9_]{0,6},[$a-zA-Z0-9_]{0,6},-\([a-z]\/2\),\n?-\([a-z]\/2\),[a-z],[a-z]\)/,
     'window.checkboxes.checkboxStatuses.fruit && $&');
-  
+
   //For compatitibilty, also change this code for animatedSnakeColours
   /*
   //Commented out until I find a new way to do animated Snake Colours
@@ -5623,7 +5623,7 @@ Same as replace, but throws an error if nothing is changed
     'window.checkboxes.checkboxStatuses.walls && $&');
 
   //lock icon
-  
+
   //funcWithRenderWall = assertReplace(funcWithRenderWall, /this\.[$a-zA-Z0-9_]{0,6}\.drawImage\([$a-zA-Z0-9_]{0,6}\(this\.[$a-zA-Z0-9_]{0,6}\),\n?128\*[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},0,128,128,[a-z]\.x-[a-z]\/2,[a-z]\.y-[a-z]\/2,[a-z],[a-z]\)\)/,
   //  'window.checkboxes.checkboxStatuses.walls && $&');
   funcWithRenderWall = assertReplace(funcWithRenderWall, /this\.[$a-zA-Z0-9_]{0,6}\.drawImage\([$a-zA-Z0-9_]{0,6}\(this\.[$a-zA-Z0-9_]{0,6}\)\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6},128\*[a-z]\.[$a-zA-Z0-9_]{0,6},0,128,128,[a-z]\.[a-z]-[a-z]\/2,[a-z]\.[a-z]-[a-z]\/2,[a-z],[a-z]\)\)/,
@@ -5721,7 +5721,7 @@ Same as replace, but throws an error if nothing is changed
     'window.checkboxes.checkboxStatuses.allButShadow && $&');
 
   //eval(funcWithMiscRendering);
-  
+
   let funcWithLockRendering_Origin = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(\)$/,
     /this\.[$a-zA-Z0-9_]{0,6}.save\(\),this\.[$a-zA-Z0-9_]{0,6}\.translate\([a-z],[a-z]\),this\.[$a-zA-Z0-9_]{0,6}\.rotate\([a-z]\),/,
     false);
@@ -5735,7 +5735,7 @@ Same as replace, but throws an error if nothing is changed
     'window.checkboxes.checkboxStatuses.walls && $&');
 
   //lock icon and sokoban icon falling
- 
+
   funcWithLockRendering = assertReplace(funcWithLockRendering, /(drawImage\(0===[a-z]\.type\?)([$a-zA-Z0-9_]{0,6}\(this.[$a-zA-Z0-9_]{0,6}.[$a-zA-Z0-9_]{0,6}\)\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6}):\n?([$a-zA-Z0-9_]{0,6}\(this.[$a-zA-Z0-9_]{0,6}.[$a-zA-Z0-9_]{0,6}\)\.[$a-zA-Z0-9_]{0,6}\.[$a-zA-Z0-9_]{0,6})/,
     '$1 (window.checkboxes.checkboxStatuses.walls ? $2 : new Image()) : (window.checkboxes.checkboxStatuses.sokobanBox ? $3 : new Image())');
 
@@ -5759,7 +5759,7 @@ Same as replace, but throws an error if nothing is changed
 
 
   //eval(funcWithKeyRendering);
-  
+
   let funcWithBodyLines_Origin = findFunctionInCode(code, /[$a-zA-Z0-9_]{0,6}\.prototype\.render=function\(a,b,c\)$/,
     /quadraticCurveTo/,
     deleteModDebug);
@@ -5835,11 +5835,11 @@ if(window.NepDebug){
     // Statue Cracks
   code = code.assertReplace(/[a-z].[$a-zA-Z0-9_]{0,6}.drawImage\([a-z]\.[$a-zA-Z0-9_]{0,6}.[$a-zA-Z0-9_]{0,6}\(\),[a-z]\.[$a-zA-Z0-9_]{0,6}\*[a-z],0,[a-z],[a-z],-[a-z]\/2,-[a-z]\/2,[a-z],[a-z]\),[a-z]\.[$a-zA-Z0-9_]{0,6}\.globalAlpha=[a-z]\)/g,
      'window.checkboxes.checkboxStatuses.brokenStatue && $&')
-     
+
      // Statue (including cracks)
   code = code.assertReplace(/[$a-zA-Z0-9_]{0,6}\(this,[a-z],[a-z],[a-z]\.[$a-zA-Z0-9_]{0,6}\.angle,[a-z]\.[$a-zA-Z0-9_]{0,6}\)/g,
      `window.checkboxes.checkboxStatuses.statue && $&`)
-    
+
 
 
   minesDefinition_Origin = code.match(/this\.[a-zA-Z0-9_$]{1,8}=new [a-zA-Z0-9_$]{1,8}\(this.[a-zA-Z0-9_$]{1,8},"snake_arcade\/mine\.png\",10,this\.[a-zA-Z0-9_$]{1,8},"snake_arcade\/pixel\/px_mine\.png\"\)/g)[0]
@@ -5906,7 +5906,7 @@ code = code.assertReplace(/[$a-zA-Z0-9_]{0,6}\([a-z],d,0,0,[a-z]\);if\([$a-zA-Z0
 }
 
 window.VisibilityModCode.runCodeAfter = function () {
-  
+
 };window.VisibilityMod = {};
 
 ////////////////////////////////////////////////////////////////////
