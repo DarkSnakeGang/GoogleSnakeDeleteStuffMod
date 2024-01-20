@@ -5806,8 +5806,8 @@ if(window.NepDebug){
     '(window.flashSnakeStatus.currentlyFlashingSnake || window.checkboxes.checkboxStatuses.body) && $&');
 
   //Body scale
-  funcWithBodyLines = assertReplace(funcWithBodyLines, /\.8/, '(window.snakeScale.tailStart * 0.8)');
-  funcWithBodyLines = assertReplace(funcWithBodyLines, /\.4/, '(window.snakeScale.tailEnd * 0.4)');
+  //funcWithBodyLines = assertReplace(funcWithBodyLines, /\.8/, '(window.snakeScale.tailStart * 0.8)');
+  //funcWithBodyLines = assertReplace(funcWithBodyLines, /\.4/, '(window.snakeScale.tailEnd * 0.4)');
 
 
   //eval(funcWithBodyLines);
