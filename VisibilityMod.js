@@ -5301,14 +5301,14 @@ window.VisibilityMod.runCodeBefore = function () {
         </div>
         <hr style="clear:both;width:90%;margin-bottom:0">
         <!--Flash Section-->
-        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 50%;display:inline-block;float:left">
+        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 55%;display:inline-block;float:left">
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
             <li>
               <label class="form-check-label"><input class="form-check-input" id="flash-snake" type="checkbox">Flash on eat</label>
             </li>  
           </ul>
         </div>
-        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 50%;display:inline-block;float:right;">
+        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 45%;display:inline-block;float:right;">
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
             <li><select id="flash-snake-timing" class="form-control" style="margin:3px;background-color:#1155CC;color:white;font-family:Roboto,Arial,sans-serif;display:flex; justify-content: center; align-items: center; text-align: center;">
               <option value="20">0.05s</option>
