@@ -414,13 +414,24 @@ window.Theme.alterCode = function (code) {
     window.real_topbar_color = real_top_bar;
     window.button_color = buttons_color;
 
-
     if (theme_name != "Globe") {
       window.snake.setCustomTheme(light_tiles, dark_tiles, shadow, border, key_block_sign_color, real_top_bar, endscreen_background)
     }
     else {
       window.snake.clearCustomTheme();
     }
+
+    if (localStorage.getItem('snakeChosenMod') === "VisibilityMod" || window.isVisi) {
+      document.getElementById('delete-stuff-draggable').style.backgroundColor = border;
+      document.getElementById('delete-stuff-draggable').style.borderColor = border;
+
+      document.getElementById('drag-handle').style.borderColor = real_top_bar;
+
+      document.getElementById('visi-title').style.backgroundColor = real_top_bar;
+      document.getElementById('visi-boxes').style.backgroundColor = real_top_bar;
+    }
+
+
   }
 
   window.getRandomThemeName = function getRandomThemeName() {
@@ -3360,7 +3371,7 @@ window.Timer = {
         editBox = document.createElement('div')
         editBox.id = 'edit-box'
         editBox.style = `
-          background-color: ${theme.bg_color ?? '#aaaaff'};
+          background-color: ${theme.real_top_bar ?? '#aaaaff'};
           border-radius: 0.5vw;
           position: absolute;
           height: 93vh;
@@ -4808,6 +4819,7 @@ window.PuddingMod = {};
 ////////////////////////////////////////////////////////////////////
 
 window.PuddingMod.runCodeBefore = function () {
+  window.isVisi = false;
 
   console.log("Thank you for loading Yarmiplay's Pudding Mod! Hope you enjoy :)");
   console.log("Please provide feedback and report bugs in #snake-modding in the Official Google Snake Discord");
@@ -4958,7 +4970,6 @@ window.PuddingMod.alterSnakeCode = function (code) {
 ////////////////////////////////////////////////////////////////////
 
 window.PuddingMod.runCodeAfter = function () {
-
   let modIndicator = document.createElement('div');
   modIndicator.style = 'position:absolute;font-family:Roboto,Arial,sans-serif;color:white;font-size:14px;padding-top:4px;padding-left:30px;user-select: none;';
   modIndicator.textContent = 'Pudding Mod';
@@ -5181,48 +5192,48 @@ window.VisibilityMod.runCodeBefore = function () {
   function injectInitialHtml() {
     let initialHtml =
       `<div id="delete-stuff-popup" style="margin:0px;position:fixed;z-index:9001;width:100%;">
-  <div id="delete-stuff-draggable" style="width:320px;background-color:khaki;z-index:9002;border-color:saddlebrown;border-style:solid;border-width:4px; border-radius:10px;box-shadow: 0 3px 10px rgba(0,0,0,0.4);position:fixed;left:0px;top:5px">
-    <div id="drag-handle" style="width:22px;height:22px;background-color: #fff5d4;position:absolute;border-top-left-radius:4px;border-bottom-right-radius:18px;border-right:3px solid saddlebrown;border-bottom:3px solid saddlebrown;cursor:move"></div>
+  <div id="delete-stuff-draggable" style="width: 320px; background-color: rgb(87, 138, 52); z-index: 9002; border-color: rgb(87, 138, 52); border-style: solid; border-width: 4px; border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.4) 0px 3px 10px; position: fixed; left: 5px; top: 5px;">
+    <div id="drag-handle" style="width: 22px; height: 22px; background-color: rgb(77, 193, 249); position: absolute; border-top-left-radius: 4px; border-bottom-right-radius: 18px; border-right: 3px solid rgb(74, 117, 44); border-bottom: 3px solid rgb(74, 117, 44); cursor: move; border-top-color: rgb(74, 117, 44); border-left-color: rgb(74, 117, 44);"></div>
     <div style="padding:10px;width:300px;margin:0;">
-      <div style="text-align:center;padding:5px;background-color:darkkhaki;color:black;font-family:impact;font-size:20px">Visibility Mod</div>
-      <div style="background-color:darkkhaki;margin-top:5px;padding:0px;padding-bottom:10px;font-family:impact;color:saddlebrown">
+      <div id="visi-title" class="form-check-label" style="text-align: center; padding: 5px; background-color: rgb(74, 117, 44); color: white; font-size: 20px;">Visibility Mod</div>
+      <div id="visi-boxes" style="background-color: rgb(74, 117, 44); margin-top: 5px; padding: 0px 0px 10px;">
         <!--Begin test area-->
         <!--Snake body Section-->
         <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 50%;display:inline-block;float:left">
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
             <li>
-              <label><input id="left-eye" type="checkbox" checked>Left Eye</label>
+              <label class="form-check-label"><input class="form-check-input" id="left-eye" type="checkbox" checked>Left Eye</label>
             </li>
             <li>
-              <label><input id="right-eye" type="checkbox" checked>Right Eye</label>
+              <label class="form-check-label"><input class="form-check-input" id="right-eye" type="checkbox" checked>Right Eye</label>
             </li>
             <li>
-              <label><input id="snoot" type="checkbox" checked>Snoot</label>
+              <label class="form-check-label"><input class="form-check-input" id="snoot" type="checkbox" checked>Snoot</label>
             </li>
             <li>
-              <label><input id="snake-body" type="checkbox" checked>Body</label>
+              <label class="form-check-label"><input class="form-check-input" id="snake-body" type="checkbox" checked>Body</label>
             </li>
             <li>
-              <label><input id="lumps" type="checkbox" checked>Lumps</label>
+              <label class="form-check-label"><input class="form-check-input" id="lumps" type="checkbox" checked>Lumps</label>
             </li>
           </ul>
         </div>
         <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 50%;display:inline-block;float:right;">
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
             <li>
-              <label><input id="eat-animation" type="checkbox" checked>Eat Anim.</label>
+              <label class="form-check-label"><input class="form-check-input" id="eat-animation" type="checkbox" checked>Eat Anim.</label>
             </li>
             <li>
-              <label><input id="tongue" type="checkbox" checked>Tongue</label>
+              <label class="form-check-label"><input class="form-check-input" id="tongue" type="checkbox" checked>Tongue</label>
             </li>
             <li>
-              <label><input id="die" type="checkbox" checked>Die Anim.</label>
+              <label class="form-check-label"><input class="form-check-input" id="die" type="checkbox" checked>Die Anim.</label>
             </li>
             <li>
-              <label><input id="shadow" type="checkbox" checked>Shadow</label>
+              <label class="form-check-label"><input class="form-check-input" id="shadow" type="checkbox" checked>Shadow</label>
             </li>
             <li>
-              <label><input id="all-but-shadow" type="checkbox" checked>Not Shadow</label>
+              <label class="form-check-label"><input class="form-check-input" id="all-but-shadow" type="checkbox" checked>Not Shadow</label>
             </li>
           </ul>
         </div>
@@ -5231,60 +5242,60 @@ window.VisibilityMod.runCodeBefore = function () {
         <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 50%;display:inline-block;float:left">
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
             <li>
-              <label><input id="light-tiles" type="checkbox" checked>Light Tiles</label>
+              <label class="form-check-label"><input class="form-check-input" id="light-tiles" type="checkbox" checked>Light Tiles</label>
             </li>
             <li>
-              <label><input id="dark-tiles" type="checkbox" checked>Dark Tiles</label>
+              <label class="form-check-label"><input class="form-check-input" id="dark-tiles" type="checkbox" checked>Dark Tiles</label>
             </li>
           </ul>
         </div>
         <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 50%;display:inline-block;float:right;">
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
             <li>
-              <label><input id="border" type="checkbox" checked>Border</label>
+              <label class="form-check-label"><input class="form-check-input" id="border" type="checkbox" checked>Border</label>
             </li>
             <li>
-              <label><input id="spin" type="checkbox">Spin</label>
+              <label class="form-check-label"><input class="form-check-input" id="spin" type="checkbox">Spin</label>
             </li>
           </ul>
         </div>
         <hr style="clear:both;width:90%;margin-bottom:0">
         <!--Fruits Section-->
-        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 50%;display:inline-block;float:left">
+        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 45%;display:inline-block;float:left">
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
             <li>
-              <label><input id="fruit" type="checkbox" checked>Fruit</label>
+              <label class="form-check-label"><input class="form-check-input" id="fruit" type="checkbox" checked>Fruit</label>
             </li>
             <li>
-              <label><input id="portals" type="checkbox" checked>Portals</label>
+              <label class="form-check-label"><input class="form-check-input" id="portals" type="checkbox" checked>Portals</label>
             </li>
             <li>
-              <label><input id="keys" type="checkbox" checked>Keys</label>
+              <label class="form-check-label"><input class="form-check-input" id="keys" type="checkbox" checked>Keys</label>
             </li>
             <li>
-            <label><input id="statue" type="checkbox" checked>Statue</label>
+            <label class="form-check-label"><input class="form-check-input" id="statue" type="checkbox" checked>Statue</label>
             </li>
             <li>
-              <label><input id="mines" type="checkbox" checked>Mines</label>
+              <label class="form-check-label"><input class="form-check-input" id="mines" type="checkbox" checked>Mines</label>
             </li>
           </ul>
         </div>
-        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 50%;display:inline-block;float:right;">
+        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 55%;display:inline-block;float:right;">
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
             <li>
-              <label><input id="walls" type="checkbox" checked>Walls/Locks</label>
+              <label class="form-check-label"><input class="form-check-input" id="walls" type="checkbox" checked>Walls/Locks</label>
             </li>
             <li>
-              <label><input id="sokoban-box" type="checkbox" checked>Sokoban box</label>
+              <label class="form-check-label"><input class="form-check-input" id="sokoban-box" type="checkbox" checked>Sokobox</label>
             </li>
             <li>
-              <label><input id="sokoban-goal" type="checkbox" checked>Sokoban goal</label>
+              <label class="form-check-label"><input class="form-check-input" id="sokoban-goal" type="checkbox" checked>Sokogoal</label>
             </li>
             <li>
-              <label><input id="broken-statue" type="checkbox" checked>Statue Cracks</label>
+              <label class="form-check-label"><input class="form-check-input" id="broken-statue" type="checkbox" checked>Cracks</label>
             </li>
             <li>
-              <label><input id="mine-radius" type="checkbox" checked>Mine Radius</label>
+              <label class="form-check-label"><input class="form-check-input" id="mine-radius" type="checkbox" checked>Mine Radius</label>
             </li>
           </ul>
         </div>
@@ -5293,25 +5304,25 @@ window.VisibilityMod.runCodeBefore = function () {
         <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 50%;display:inline-block;float:left">
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
             <li>
-              <label><input id="flash-snake" type="checkbox">Flash on eat</label>
+              <label class="form-check-label"><input class="form-check-input" id="flash-snake" type="checkbox">Flash on eat</label>
             </li>  
           </ul>
         </div>
         <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 50%;display:inline-block;float:right;">
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
-            <li><select id="flash-snake-timing">
+            <li><select id="flash-snake-timing" class="form-control" style="margin:3px;background-color:#1155CC;color:white;font-family:Roboto,Arial,sans-serif;display:flex; justify-content: center; align-items: center; text-align: center;">
               <option value="20">0.05s</option>
               <option value="200">0.2s</option>
               <option value="500">0.5s</option>
               <option value="1000" selected="">1s</option>
               <option value="2000">2s</option>
               <option value="3000">3s</option>
-            </select> Flash time
+            </select> 
             </li>
           </ul>
         </div>
         <!--End test area-->
-        <div style="text-align:center; clear:both"><a id="delete-stuff-close" href="#">Close</a> (Press i to show again)</div>
+        <div style="text-align:center; clear:both" class="form-check-label"><a id="delete-stuff-close" href="#">Close</a> (Press i to show again)</div>
       </div>
 
     </div>
@@ -5319,7 +5330,7 @@ window.VisibilityMod.runCodeBefore = function () {
   </div>
 </div>
 <template id="tooltiptemplate">
-  <div style="position:relative;display:inline-block;color: #c44a4a;float:right;background-color: #f7f6d9;border-radius:50%;width:1em;height:1em;text-align:center;font-family:calibri;font-weight:bold;line-height:1em;" class="tooltip">
+  <div style="position:relative;display:inline-block;color: white;float:right;background-color: black;border-radius:50%;width:1em;height:1em;text-align:center;font-family:Roboto,Arial,sans-serif;line-height:1em;" class="tooltip">
   ?
   <div style="position:absolute;top:0;left:120%;background-color:black;color:white;border-radius:0.5em;padding:0.5em;font-weight:normal;box-shadow:0 3px 10px rgba(0,0,0,0.4);width:110px;z-index:9003;visibility:hidden;opacity:0;transition: opacity 0.8s;" class="tooltiptext">
   </div>
@@ -5339,7 +5350,7 @@ window.VisibilityMod.runCodeBefore = function () {
     let customStyle = document.createElement('style');
     customStyle.type = 'text/css';
     customStyle.innerHTML = `.tooltip:hover .tooltiptext:not(:hover){visibility:visible!important;opacity:1!important;}
-  #drag-handle:hover{background-color:#f2e4b8!important;}
+  #drag-handle:hover{background-color:rgb(17, 85, 204)!important;}
   #delete-stuff-popup label,#delete-stuff-popup div{user-select:none;}
   
   :root {--rotation-period: 30s;}
@@ -5906,7 +5917,8 @@ code = code.assertReplace(/[$a-zA-Z0-9_]{0,6}\([a-z],d,0,0,[a-z]\);if\([$a-zA-Z0
   `$& window.checkboxes.checkboxStatuses.mineRadius &&`)
 
   //console.log(code)
-  
+  window.isVisi = true;
+
   return code;
 }
 
