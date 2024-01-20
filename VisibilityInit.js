@@ -218,7 +218,7 @@ window.VisibilityMod.runCodeBefore = function () {
       <div id="visi-boxes" style="background-color: rgb(74, 117, 44); margin-top: 5px; padding: 0px 0px 10px;">
         <!--Begin test area-->
         <!--Snake body Section-->
-        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 50%;display:inline-block;float:left">
+        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 45%;display:inline-block;float:left">
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
             <li>
               <label class="form-check-label"><input class="form-check-input" id="left-eye" type="checkbox" checked>Left Eye</label>
@@ -237,7 +237,7 @@ window.VisibilityMod.runCodeBefore = function () {
             </li>
           </ul>
         </div>
-        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 50%;display:inline-block;float:right;">
+        <div style="box-sizing: border-box;padding:5px;margin: 0px;width: 55%;display:inline-block;float:right;">
           <ul style="list-style-type: none;padding:5px;margin-top:0;margin-bottom:0">
             <li>
               <label class="form-check-label"><input class="form-check-input" id="eat-animation" type="checkbox" checked>Eat Anim.</label>
