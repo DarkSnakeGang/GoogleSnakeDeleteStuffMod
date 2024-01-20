@@ -1,10 +1,10 @@
-window.VisibilityMod = {};
+window.VisibilityModCode = {};
 
 ////////////////////////////////////////////////////////////////////
 //RUNCODEBEFORE
 ////////////////////////////////////////////////////////////////////
 
-window.VisibilityMod.runCodeBefore = function () {
+window.VisibilityModCode.runCodeBefore = function () {
   window.catchError = function catchError(culprit_regex, code) {
     try {
       something = code.match(culprit_regex)[0];
@@ -37,7 +37,7 @@ window.VisibilityMod.runCodeBefore = function () {
   }
 
   //loadAndRunCodeSynchronous('https://raw.githubusercontent.com/DarkSnakeGang/GoogleSnakePudding/main/PuddingMod.js');
-  window.PuddingMod.runCodeBefore();
+  //window.PuddingMod.runCodeBefore();
 
   console.log("Enabling Visibility Mod");
 
@@ -452,9 +452,9 @@ window.VisibilityMod.runCodeBefore = function () {
 //ALTERSNAKECODE
 ////////////////////////////////////////////////////////////////////
 
-window.VisibilityMod.alterSnakeCode = function (code) {
+window.VisibilityModCode.alterSnakeCode = function (code) {
   
-  code = window.PuddingMod.alterSnakeCode(code);
+  //code = window.PuddingMod.alterSnakeCode(code);
 
   let deleteModDebug = false;
   if (localStorage.getItem('snakeChosenMod') === "customUrl") {
@@ -939,10 +939,6 @@ code = code.assertReplace(/[$a-zA-Z0-9_]{0,6}\([a-z],d,0,0,[a-z]\);if\([$a-zA-Z0
   return code;
 }
 
-window.VisibilityMod.runCodeAfter = function () {
-  let modIndicator = document.createElement('div');
-  modIndicator.style = 'position:absolute;font-family:roboto;color:white;font-size:14px;padding-top:4px;padding-left:30px;user-select: none;';
-  modIndicator.textContent = 'Visibility Mod';
-  let canvasNode = document.getElementsByClassName('jNB0Ic')[0];
-  document.getElementsByClassName('EjCLSb')[0].insertBefore(modIndicator, canvasNode);
+window.VisibilityModCode.runCodeAfter = function () {
+  
 };
