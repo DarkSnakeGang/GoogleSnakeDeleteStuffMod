@@ -414,7 +414,7 @@ window.VisibilityMod.runCodeBefore = function () {
       'statue': "The statue in statue mode. Including broken statue.",
       'broken-statue': "The broken statues in statue mode.",
       'spin': "Spin the entire board.",
-      'mine-radius': "The mine's radius in minesweeper mode. Dashed lines.",
+      'mine-radius': "The mine's radius in minesweeper mode. Dashed lines. Also includes confetti from explosion.",
     };
 
     for (let inputElementId in tooltipText) {
