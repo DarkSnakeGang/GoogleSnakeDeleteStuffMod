@@ -302,7 +302,6 @@ window.Theme.make = function () {
       endscreen_background: advancedSettings.themeCol7 ?? '#000000',
       sep_color: '#7eccfa',
       topbar_color: '#3a91bb',
-      real_top_bar: '#4a752c',
       buttons_color: '#1155CC',
       bg_color: '#4dc1f9',
       bottom_color: '#4dc1f9'
@@ -449,7 +448,7 @@ window.Theme.alterCode = function (code) {
   else{window.randomTheme = true;window.setTheme(window.getRandomThemeName());};
   `)
 
-  reset_regex = new RegExp(/;this\.reset\(\)/)
+  reset_regex = new RegExp(/;this\.reset\(\)\}\}/)
 
   set_on_reset = `;
   if(window.randomTheme){window.setTheme(window.getRandomThemeName());}
@@ -629,7 +628,7 @@ nothing =` if(window.pudding_settings.SokoGoals && a.${last_path}.path.includes(
     }
     ${code.match(keep_running)[0]}`)
 */
-    reset_regex = new RegExp(/;this\.reset\(\)/)
+    reset_regex = new RegExp(/;this\.reset\(\)\}\}/)
 
     set_on_reset = `;
     if (window.pudding_settings.SokoGoals) {
@@ -876,7 +875,7 @@ window.Counter.make = function () {
 
 window.Counter.alterCode = function (code) {
 
-    reset_regex = new RegExp(/;this\.reset\(\)/)
+    reset_regex = new RegExp(/;this\.reset\(\)\}\}/)
 
     counter_reset_code = `;stats.inputs.game = 0;
     stats.walls.game = 0;
@@ -891,7 +890,8 @@ window.Counter.alterCode = function (code) {
         stats.visible = false;
     }
     window.setCounter();
-    updateCounterDisplay();this.reset();`
+    updateCounterDisplay();
+    $&`
 
     catchError(reset_regex, code)
     code = code.assertReplace(reset_regex, counter_reset_code);
@@ -983,6 +983,9 @@ window.TimeKeeper.make = function () {
         if (window.timeKeeper.debug) {
             //console.log("got Apple %s, %s", time, score);
         }
+        if (localStorage.getItem('snakeChosenMod') != "PuddingMod"){
+            return;
+        }
         window.timeKeeper.lastAppleDate = new Date();
         window.timeKeeper.lastAppleTime = time;
         //save time
@@ -999,6 +1002,9 @@ window.TimeKeeper.make = function () {
         if (window.timeKeeper.debug) {
             //console.log("got All %s, %s", time, score);
         }
+        if (localStorage.getItem('snakeChosenMod') != "PuddingMod"){
+            return;
+        }
         window.timeKeeper.savePB(time, "ALL", window.timeKeeper.mode, window.timeKeeper.count, window.timeKeeper.speed, window.timeKeeper.size);
     }
 
@@ -1006,6 +1012,9 @@ window.TimeKeeper.make = function () {
     window.timeKeeper.death = function (time, score) {
         if (window.timeKeeper.debug) {
             //console.log("death %s, %s", time, score);
+        }
+        if (localStorage.getItem('snakeChosenMod') != "PuddingMod"){
+            return;
         }
         if (window.timeKeeper.playing) {
             window.timeKeeper.playing = false;
@@ -1538,8 +1547,8 @@ window.TimeKeeper.alterCode = function (code) {
     //modeFunc = modeFunc.substring(modeFunc.indexOf("(") + 1, modeFunc.lastIndexOf("("));
     //modeFunc = modeFunc.split('(')[0];
     //scoreFunc = func.match(/25\!\=\=this.[a-zA-Z0-9$]{1,4}/)[0]; // Need to figure this out
-    scoreFuncVar = func.match(/25\=\=\=[a-zA-Z0-9$]{1,4}/)[0].split('=')[3]; // Assuming he wanted just the "this.score"
-    scoreFunc = func.match(`${window.escapeRegex(scoreFuncVar)}=this.[a-zA-Z0-9$]{1,6}`)[0].split('=')[1]
+    scoreFuncVar = func.match(/25\=\=\=\n?[a-zA-Z0-9$]{1,4}/)[0].split('=')[3]; // Assuming he wanted just the "this.score"
+    scoreFunc = func.match(`${window.escapeRegex(scoreFuncVar.replace('\n', ''))}=this.[a-zA-Z0-9$]{1,6}`)[0].split('=')[1]
     ////console.log(scoreFunc)
     //scoreFunc = scoreFunc.substring(scoreFunc.indexOf("this."),scoreFunc.size);
     //timeFunc = func.match(/this.[a-zA-Z0-9$]{1,6}\*this.[a-zA-Z0-9$]{1,6}/)[0];
@@ -2037,7 +2046,6 @@ window.TopBar.make = function () {
   }
 
  // window.topbar_icons = true;
-  window.is_muted = false;
   window.count_setting = 0;
   window.speed_setting = 0;
 
@@ -2053,9 +2061,6 @@ window.TopBar.alterCode = function (code) {
   count_var = "window.count_setting"
   speed_var = "window.speed_setting"
 
-  muted_img = "volume_off_white_24dp.png"
-  unmuted_img = "volume_up_white_24dp.png"
-
   window.count_img_arr = Array.from(document.querySelector('#count').children).map(el=>el.src);
   window.speed_img_arr = Array.from(document.querySelector('#speed').children).map(el=>el.src);
 
@@ -2065,46 +2070,47 @@ window.TopBar.alterCode = function (code) {
   set_count_code = `$&${count_var}=`
   set_speed_code = `$&${speed_var}=`
 
-  fruit_jsname = document.querySelector('img[src$="apple_00.png"]').getAttribute("jsname")
-  fruit_src = `document.querySelector('img[jsname="${fruit_jsname}"]').src `
-  try {
-    mute_jsname = document.querySelector(`img[src$="${unmuted_img}"`).getAttribute("jsname")
-    window.is_muted = false;
-  } catch (error) {
-    if (window.NepDebug) {
-      console.log("Noticed it's muted, adjusting.")
-    }
-    mute_jsname = document.querySelector(`img[src$="${muted_img}"`).getAttribute("jsname")
-    window.is_muted = true;
-  }
-  mute_src = `document.querySelector('img[jsname="${mute_jsname}"]').src `
+  fruit_jsname = document.querySelector('[src$="apple_00.png"]').getAttribute("jsname")
+  fruit_src = `document.querySelector('[jsname="${fruit_jsname}"]').src `
 
-  muted_img = "https://i.postimg.cc/dQdCRwyH/volume-off-white-24dp.png"
-  unmuted_img = "https://i.postimg.cc/HsgyBR0p/volume-up-white-24dp.png"
+  window.mute_divs = document.querySelectorAll('[aria-label="Mute"]');
+  window.mute_default_innerHTML = [window.mute_divs[0].innerHTML, window.mute_divs[1].innerHTML]
+  window.mute_speed_element = document.createElement('img');
+  window.mute_speed_element.classList.add('EFcTud')
+  window.mute_speed_element.src = "https://www.google.com/logos/fnbx/snake_arcade/v3/speed_00.png"
+  window.mute_speed_element.style.padding = '0px';
+  window.mute_speed_copy = window.mute_speed_element.cloneNode(true);
+
+  window.control_mute_img = function control_mute_img(TopBar, SpeedSrc) {
+    if (TopBar) {
+      for (let index = 0; index < window.mute_divs.length; index++) {
+        const element = window.mute_divs[index];
+        element.innerHTML = ''
+      }
+      window.mute_speed_element.src = SpeedSrc
+      window.mute_speed_copy.src = SpeedSrc
+      window.mute_divs[0].appendChild(window.mute_speed_element)
+      window.mute_divs[1].appendChild(window.mute_speed_copy)
+      return;
+    }
+    for (let index = 0; index < window.mute_divs.length; index++) {
+      const element = window.mute_divs[index];
+      element.innerHTML = window.mute_default_innerHTML[index]
+    }
+  }
 
   code = code.assertReplace(count_regex, set_count_code);
   code = code.assertReplace(speed_regex, set_speed_code);
 
-  reset_regex = new RegExp(/;this\.reset\(\)/)
+  reset_regex = new RegExp(/;this\.reset\(\)\}\}/)
 
   set_on_reset = `;
   if (window.pudding_settings.TopBar) {
-    ${mute_src} = window.speed_img_arr[${speed_var}]
     ${fruit_src} = window.count_img_arr[${count_var}]
   }
-  else {
-    ${mute_src} = window.is_muted ? "${muted_img}" : "${unmuted_img}";
-  }
+  window.control_mute_img(window.pudding_settings.TopBar, window.speed_img_arr[${speed_var}])
   $&`
   code = code.assertReplace(reset_regex, set_on_reset)
-
-  volume_regex = new RegExp(/this\.[a-zA-Z0-9_$]{1,8}\?\"\/\/www\.gstatic\.com\/images\/icons\/material\/system\/2x\/volume_off_white_24dp.png\"\:\"\/\/www\.gstatic\.com\/images\/icons\/material\/system\/2x\/volume_up_white_24dp\.png\"\;/)
-  disable_mute = `$&
-  if (window.pudding_settings.TopBar) {
-    ${mute_src} = window.speed_img_arr[${speed_var}]
-  }
-  `
-  code = code.assertReplace(volume_regex, disable_mute)
 
   return code;
 }
@@ -2303,17 +2309,16 @@ window.SnakeColor.alterCode = function (code) {
     ${code.match(rainbow_usage_regex)[0].split('{')[1]}
     `
 
+    code = code.assertReplace(rainbow_usage_regex, rainbow_code)
+
     // https://www.google.com/logos/fnbx/snake_arcade/v5/color_10.png
 
-
-
-    snake_face_regex = new RegExp(/[a-zA-Z0-9_$]{1,6}\.[a-zA-Z0-9_$]{1,8}\.[a-zA-Z0-9_$]{1,6}\)[a-zA-Z0-9_$]{1,6}\.[a-zA-Z0-9_$]{1,6}=[a-zA-Z0-9_$]{1,6}\[0\]\[0\]/)
+    snake_face_regex = new RegExp(/[a-zA-Z0-9_$]{1,6}\.[a-zA-Z0-9_$]{1,8}\.[a-zA-Z0-9_$]{1,6}\?\([a-zA-Z0-9_$]{1,6}\.[a-zA-Z0-9_$]{1,6}=[a-zA-Z0-9_$]{1,6}\[0\]\[0\]/)
     catchError(snake_face_regex, code)
     snake_face_code = code.match(snake_face_regex)[0]
-    snake_face_code = `${code.match(snake_face_regex)[0].split('=')[0]}=10===${code.match(snake_face_regex)[0].split(')')[0]}? window.rainbowAlts[window.snakeRainbowOverride].set[0] : ${code.match(snake_face_regex)[0].split('=')[1]}`
+    snake_face_code = `${code.match(snake_face_regex)[0].split('=')[0]}=10===${code.match(snake_face_regex)[0].split('?')[0]}? window.rainbowAlts[window.snakeRainbowOverride].set[0] : ${code.match(snake_face_regex)[0].split('=')[1]}`
 
     //console.log(snake_face_code)
-    code = code.assertReplace(rainbow_usage_regex, rainbow_code)
     code = code.assertReplace(snake_face_regex, snake_face_code)
     //code = code.assertReplace(/a\.Yd=qN\[0\]\[1\];/, `a.Yd=10 === a.settings.Aa ? window.rainbowAlts[window.snakeRainbowOverride].set[0] : qN[0][1];`)
     //code = code.assertReplace(code.match(`${default_rainbow_array}\\\[0\\\]`)[0], `window.rainbowAlts[window.snakeRainbowOverride].set[0]`)
@@ -2433,10 +2438,11 @@ window.SettingsSaver.alterCode = function (code) {
     window.PopulateOptions();
     window.PopulateDropdowns();
 
-    reset_regex = new RegExp(/;this\.reset\(\)/)
+    reset_regex = new RegExp(/;this\.reset\(\)\}\}/)
 
     settings_reset_code = `
-    saveSettings();this.reset();`
+    saveSettings();
+    $&`
 
     catchError(reset_regex, code)
     code = code.assertReplace(reset_regex, settings_reset_code);
@@ -2474,8 +2480,8 @@ window.SpeedInfo.make = function () {
         }
         url += "id=" + new Date().getTime()
         if (window.NepDebug) {
-            console.log(url);
-            console.log("Getting runs..." + window.requestsMade);
+            //console.log(url);
+            //console.log("Getting runs..." + window.requestsMade);
         }
 
         let request = new XMLHttpRequest();
@@ -2534,9 +2540,8 @@ window.SpeedInfo.make = function () {
         13: { name: "Statue" },
         14: { name: "Light" },
         15: { name: "Shield" },
-        16: { name: "Arrow" },
-        17: { name: "Peaceful" },
-        18: { name: "Blender" },
+        16: { name: "Peaceful" },
+        17: { name: "Blender" },
     }
 
     window.countToTxt = {
@@ -2593,9 +2598,8 @@ window.SpeedInfo.make = function () {
         STATUE = 13
         LIGHT = 14
         SHIELD = 15
-        ARROW = 16
-        PEACEFUL = 17
-        BLENDER = 18
+        PEACEFUL = 16
+        BLENDER = 17
 
         // Speed list
         DEFAULT_SPEED = 0
@@ -2629,10 +2633,10 @@ window.SpeedInfo.make = function () {
             HandleHighscore("Empty")
             return;
         }
-        //if (mode == STATUE && level == "H" && speed == SLOW) {
-        //    HandleHighscore("Empty")
-        //    return; // Statue isn't highscore on slow (yet?)
-        //}
+        if (mode == STATUE && level == "H" && speed == SLOW) {
+            HandleHighscore("Empty")
+            return; // Statue isn't highscore on slow (yet?)
+        }
 
         gameID = speed == SLOW ? gameIDs[1] : gameIDs[0]; // Set gameID to CE if Slow
 
@@ -2696,8 +2700,8 @@ window.SpeedInfo.make = function () {
             }
 
             if (window.NepDebug) {
-                console.log("https://www.speedrun.com/api/v1/leaderboards/" + gameID +
-                    "/category/" + Highscore_ID + "?top=1&" + catch_multi + catch_speed + catch_size)
+                //console.log("https://www.speedrun.com/api/v1/leaderboards/" + gameID +
+                //    "/category/" + Highscore_ID + "?top=1&" + catch_multi + catch_speed + catch_size)
             }
 
             makeAPIrequest("https://www.speedrun.com/api/v1/leaderboards/" + gameID +
@@ -2728,7 +2732,7 @@ window.SpeedInfo.make = function () {
         src_link_stuff = "https://www.speedrun.com/api/v1/leaderboards/" + gameID + "/level/"
 
         if (window.NepDebug) {
-            console.log(src_link_stuff + level_ID + "/" + category_ID + "?top=1&" + catch_multi + catch_size)
+            //console.log(src_link_stuff + level_ID + "/" + category_ID + "?top=1&" + catch_multi + catch_size)
         }
         switch (level) {
             case "25":
@@ -2756,10 +2760,6 @@ window.SpeedInfo.make = function () {
         }
 
 
-    }
-
-    function printMe(response) {
-        console.log(response);
     }
 
     //window.getRecordSRC("H");
@@ -2796,7 +2796,7 @@ window.SpeedInfo.make = function () {
 
         //document.getElementById('Hsrc').href = response["data"]["runs"][0]["run"].weblink
         if (window.NepDebug) {
-            console.log("Found 25 apples " + world_record + " " + response["data"]["runs"][0]["run"].weblink)
+            //console.log("Found 25 apples " + world_record + " " + response["data"]["runs"][0]["run"].weblink)
         }
     }
     function Handle50(response) {
@@ -2860,7 +2860,7 @@ window.SpeedInfo.make = function () {
         document.getElementById('Hsrc').innerHTML = `Highscore: <a target="_blank" style="text-decoration: none;color:#ADD8E6 !important;" href="` + response["data"]["runs"][0]["run"].weblink + `">` + world_record + `</a>`
         //document.getElementById('Hsrc').href = response["data"]["runs"][0]["run"].weblink
         if (window.NepDebug) {
-            console.log("Found highscore " + highscore + " " + response["data"]["runs"][0]["run"].weblink)
+            //console.log("Found highscore " + highscore + " " + response["data"]["runs"][0]["run"].weblink)
         }
     }
 
@@ -3002,12 +3002,12 @@ window.SpeedInfo.make = function () {
 
     //Listeners to hide/show speedinfo box
     const backButton = 'p17HVe';
-    document.querySelector("img[class^=\"" + backButton + "\"]").addEventListener("click", (e) => {
+    document.querySelector("[class^=\"" + backButton + "\"]").addEventListener("click", (e) => {
         window.SpeedInfoUpdate();
     });
 
     const playButton = 'NSjDf';
-    document.querySelector("div[jsname^=\"" + playButton + "\"]").addEventListener("click", (e) => {
+    document.querySelector("[jsname^=\"" + playButton + "\"]").addEventListener("click", (e) => {
         window.SpeedInfoUpdate();
     });
 
@@ -3024,6 +3024,7 @@ window.SpeedInfo.make = function () {
         var gamemode = "";
         for (t of modeStr) {
             if (t == 1) {
+
                 switch (counter) {
                     case 0: gamemode += "Wall, "; break;
                     case 1: gamemode += "Portal, "; break;
@@ -3040,8 +3041,7 @@ window.SpeedInfo.make = function () {
                     case 12: gamemode += "Statue, "; break;
                     case 13: gamemode += "Light, "; break;
                     case 14: gamemode += "Shield, "; break;
-                    case 15: gamemode += "Arrow, "; break;
-                    case 16: gamemode += "Peaceful, "; break;
+                    case 15: gamemode += "Peaceful, "; break;
                     default: gamemode += "Unknown, "; break;
                 }
             }
@@ -3122,11 +3122,11 @@ window.SpeedInfo.make = function () {
 }
 
 window.SpeedInfo.alterCode = function (code) {
-    reset_regex = new RegExp(/;this\.reset\(\)/)
+    reset_regex = new RegExp(/;this\.reset\(\)\}\}/)
 
     speedinfo_reset = `;window.SpeedInfoUpdate();
     if(window.first_time_call){window.getAllSrc();window.first_time_call=false;}
-    ;this.reset();`
+    ;$&`
 
 
     catchError(reset_regex, code)
@@ -3423,135 +3423,133 @@ window.Timer = {
           border: 1px solid ${theme.topbar_color ?? '#4444dd'};
           font-size: 2.5vh;
           color: #ffffff;
-          width: 70vw;
-          font-family: Consolas;
+          width: 50vw;
+          font-family: Roboto,Arial,sans-serif;
           overflow-y: auto;
         `
         editBox.innerHTML = `
-          <span id="close-box" style="
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            cursor: pointer;
-            color: #ffffff;
-            font-size: 0.9em;
-          ">&#x2715</span>
+        <span id="close-box" style="
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        cursor: pointer;
+        color: #ffffff;
+        font-size: 0.9em;
+      ">&#x2715</span>
+</br>
+<label class="form-check-label" style="font-size: 3.5vh">
+        Custom Timer/Splits Settings
+      </label> </br>
+</br>
 
-          <h1 style="font-size: 3.5vh">
-            Edit PB/Comparison
-          </h1>
+<div id="edit-mode">
+  <img class="sel" style="cursor: pointer; border: 0.5vh ridge #af4490ff; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_00.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_01.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_02.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_03.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_04.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_05.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_06.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_07.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_08.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_09.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_10.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_11.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_12.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_13.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_14.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v17/trophy_15.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v18/trophy_16.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_15.png" />
+</div>
+<br/>
+<div id="edit-count">
+  <img class="sel" style="cursor: pointer; border: 0.5vh ridge #af4490ff; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v17/count_00.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v17/count_01.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v17/count_02.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v17/count_03.png" />
+</div>
+<br/>
+<div id="edit-speed">
+  <img class="sel" style="cursor: pointer; border: 0.5vh ridge #af4490ff; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v3/speed_00.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v3/speed_01.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v3/speed_02.png" />
+</div>
+<br/>
+<div id="edit-size">
+  <img class="sel" style="cursor: pointer; border: 0.5vh ridge #af4490ff; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v4/size_00.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v4/size_01.png" />
+  <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v4/size_02.png" />
+</div>
+<br/>
 
-          <div id="edit-mode">
-            <img class="sel" style="cursor: pointer; border: 0.5vh ridge #af4490ff; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_00.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_01.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_02.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_03.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_04.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_05.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_06.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_07.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_08.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_09.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_10.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_11.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_12.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_13.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_14.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v17/trophy_15.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v18/trophy_16.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v16/trophy_15.png"/>
-          </div>
-          <br/>
-          <div id="edit-count">
-            <img class="sel" style="cursor: pointer; border: 0.5vh ridge #af4490ff; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v17/count_00.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v17/count_01.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v17/count_02.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v17/count_03.png"/>
-          </div>
-          <br/>
-          <div id="edit-speed">
-            <img class="sel" style="cursor: pointer; border: 0.5vh ridge #af4490ff; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v3/speed_00.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v3/speed_01.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v3/speed_02.png"/>
-          </div>
-          <br/>
-          <div id="edit-size">
-            <img class="sel" style="cursor: pointer; border: 0.5vh ridge #af4490ff; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v4/size_00.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v4/size_01.png"/>
-            <img class="uns" style="cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://www.google.com/logos/fnbx/snake_arcade/v4/size_02.png"/>
-          </div>
-          <br/>
+<div id="edit-cat">
+  <img class="uns" style="background-color: #ffffff55; cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://i.postimg.cc/d1R1Y648/25.png" />
+  <img class="uns" style="background-color: #ffffff55; cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://i.postimg.cc/7hmZC6vh/50.png" />
+  <img class="uns" style="background-color: #ffffff55; cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://i.postimg.cc/qqk7MK5W/100.png" />
+  <img class="sel" style="background-color: #ffffff55; cursor: pointer; border: 0.5vh ridge #af4490ff; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://i.postimg.cc/52j6Cw2V/all.png" />
+</div>
 
-          <div id="edit-cat">
-            <img class="uns" style="background-color: #ffffff55; cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://i.postimg.cc/d1R1Y648/25.png" />
-            <img class="uns" style="background-color: #ffffff55; cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://i.postimg.cc/7hmZC6vh/50.png" />
-            <img class="uns" style="background-color: #ffffff55; cursor: pointer; border: 0.5vh ridge #00000000; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://i.postimg.cc/qqk7MK5W/100.png"/>
-            <img class="sel" style="background-color: #ffffff55; cursor: pointer; border: 0.5vh ridge #af4490ff; border-radius: 1vh; width: 3.5vh; height: 3.5vh;" src="https://i.postimg.cc/52j6Cw2V/all.png"/>
-          </div>
+<br/>
+<div id="edit-times" style="left:0px;">
+  <div>
+      <label class="form-check-label" for="edit-25"> 25</label>
+      <input class="text-input" size="9" name="edit-25" id="edit-25" type="text" style="font-family:Consolas;" />
+  </div>
+  <div>
+      <label class="form-check-label" for="edit-50"> 50</label>
+      <input class="text-input" size="9" name="edit-50" id="edit-50" type="text" style="font-family:Consolas;" />
+  </div>
+  <div>
+      <label class="form-check-label" for="edit-100">100</label>
+      <input class="text-input" size="9" name="edit-100" id="edit-100" type="text" style="font-family:Consolas;" />
+  </div>
+  <div>
+      <label class="form-check-label" for="edit-ALL">ALL</label>
+      <input class="text-input" size="9" name="edit-ALL" id="edit-ALL" type="text" style="font-family:Consolas;" />
+  </div>
+</div>
 
-          <br/>
-          <div id="edit-times" style="left:0px;">
+<div id="edit-customsplit" style="border-top:0px solid black">
 
-            <div>
-              <label for="edit-25"> 25</label>
-              <input size="9" name="edit-25" id="edit-25" type="text" style="font-family:Consolas;font-size:1.5vh"/>
-            </div>
-            <div>
-              <label for="edit-50"> 50</label>
-              <input size="9" name="edit-50" id="edit-50" type="text" style="font-family:Consolas;font-size:1.5vh"/>
-            </div>
-            <div>
-              <label for="edit-100">100</label>
-              <input size="9" name="edit-100" id="edit-100" type="text" style="font-family:Consolas;font-size:1.5vh"/>
-            </div>
-            <div>
-              <label for="edit-ALL">ALL</label>
-              <input size="9" name="edit-ALL" id="edit-ALL" type="text" style="font-family:Consolas;font-size:1.5vh"/>
-            </div>
-          </div>
+</div>
 
-          <div id="edit-customsplit" style="border-top:1px solid black">
+<div id="edit-split">
+  <label class="form-check-label" for="edit-splitscore">New Split</label>
+  <input class="text-input" size="6" name="edit-splitscore" id="edit-splitscore" type="number" placeholder="Score" />
+  <button class="btn" style="margin:3px;color:white;background-color:#1155CC;font-family:Roboto,Arial,sans-serif;" id="edit-addsplit">Add</button>
+</div>
+<div id="edit-customsplit" style="border-top:0px solid black">
+</br>
+<label class="form-check-label" style="flex:center;">Timer Format</label>
+<select class="form-control" id="edit-format" style="flex:center;">
+    <option value="0">0:00:00:000</option>
+    <option value="1">  00:00:000</option>
+    <option value="2">   0:00:000</option>
+    <option value="3">     00:000</option>
+    <option value="4">      0:000</option>
+    <option value="5">0:00:00.000</option>
+    <option value="6">  00:00.000</option>
+    <option value="7">   0:00.000</option>
+    <option value="8">     00.000</option>
+    <option value="9">      0.000</option>
+  </select>
+<br/>
+<input class="form-check-input" style="width: 1.5em; height: 1.5em;" type="checkbox" checked="true" name="edit-delta" id="edit-delta" />
+<label class="form-check-label" for="edit-delta">Show Delta</label>
+<br/>
+<br/>
+<label class="form-check-label" for="edit-aheadg">Ahead (gaining time)</label>
+<input class="text-input" style="margin: 0; padding: 0; border: 0; width: 6vh; height: 3vh;" name="edit-aheadg" id="edit-aheadg" type="color" />
+<label class="form-check-label" for="edit-aheadl">Ahead (losing time)</label>
+<input class="text-input" style="margin: 0; padding: 0; border: 0; width: 6vh; height: 3vh;" name="edit-aheadl" id="edit-aheadl" type="color" />
+<br/>
+<label class="form-check-label" for="edit-behindg">Behind (gaining time)</label>
+<input class="text-input" style="margin: 0; padding: 0; border: 0; width: 6vh; height: 3vh;" name="edit-behindg" id="edit-behindg" type="color" />
+<label class="form-check-label" for="edit-behindl">Behind (losing time)</label>
+<input class="text-input" style="margin: 0; padding: 0; border: 0; width: 6vh; height: 3vh;" name="edit-behindl" id="edit-behindl" type="color" />
 
-          </div>
-
-          <div id="edit-split">
-            <label for="edit-splitscore">New Split</label>
-            <input style="font-family:Consolas;font-size:1.5vh" size="6" name="edit-splitscore" id="edit-splitscore" type="number" placeholder="Score"/>
-            <button style="font-family:Consolas;font-size:1.5vh;" id="edit-addsplit">Add</button>
-          </div>
-
-          <div id="edit-layout" style="border-top:1px solid black;">
-            Timer Format
-            <select id="edit-format" style="font-family: Consolas; font-size: 1.5vh">
-              <option value="0">0:00:00:000</option>
-              <option value="1">  00:00:000</option>
-              <option value="2">   0:00:000</option>
-              <option value="3">     00:000</option>
-              <option value="4">      0:000</option>
-              <option value="5">0:00:00.000</option>
-              <option value="6">  00:00.000</option>
-              <option value="7">   0:00.000</option>
-              <option value="8">     00.000</option>
-              <option value="9">      0.000</option>
-            </select>
-            <br/>
-            <input style="width: 1.5vh; height: 1.5vh;" type="checkbox" checked="true" name="edit-delta" id="edit-delta"/>
-            <label for="edit-delta">Show Delta</label>
-            <br/>
-            <label for="edit-aheadg">Ahead  (gaining time)</label>
-            <input style="margin: 0; padding: 0; border: 0; width: 6vh; height: 3vh;" name="edit-aheadg" id="edit-aheadg" type="color"/>
-               
-            <label for="edit-aheadl">Ahead  (losing  time)</label>
-            <input style="margin: 0; padding: 0; border: 0; width: 6vh; height: 3vh;" name="edit-aheadl" id="edit-aheadl" type="color"/>
-            <br/>
-            <label for="edit-behindg">Behind (gaining time)</label>
-            <input style="margin: 0; padding: 0; border: 0; width: 6vh; height: 3vh;" name="edit-behindg" id="edit-behindg" type="color"/>
-               
-            <label for="edit-behindl">Behind (losing  time)</label>
-            <input style="margin: 0; padding: 0; border: 0; width: 6vh; height: 3vh;" name="edit-behindl" id="edit-behindl" type="color"/>
-
-
-          </div>
+</div>
         `
         document.body.appendChild(editBox)
         document.getElementById('close-box').addEventListener('click', function() { document.getElementById('edit-box').remove() })
@@ -3600,15 +3598,15 @@ window.Timer = {
           splitLabel.innerText = splitScore.toString().padStart(3, ' ') + ' '
 
           const splitInput = document.createElement('input')
+          splitInput.className = 'text-input'
           splitInput.id = splitInput.name = splitName
           splitInput.size = 9
           splitInput.type = 'text'
-          splitInput.style.fontSize = '1.5vh'
 
 
           const splitDeleteButton = document.createElement('button')
-          splitDeleteButton.style.fontSize = '1.5vh'
           splitDeleteButton.innerText = 'Delete'
+          splitDeleteButton.className = 'btn'
           splitDeleteButton.addEventListener('click', function() {
             splitDiv.remove()
 
@@ -3638,7 +3636,7 @@ window.Timer = {
 
 
             const key = splitInput.name.replace('edit-', '')
-
+            splitInput.className = 'text-input'
 
             const _mode  = getSelected('#edit-mode',  'sel')
             const _count = getSelected('#edit-count', 'sel')
@@ -3778,13 +3776,13 @@ window.Timer = {
               splitInput.id = splitInput.name = splitName
               splitInput.size = 9
               splitInput.type = 'text'
-              splitInput.style.fontSize = '1.5vh'
+              splitInput.className = 'text-input'
               splitInput.value = +_splitTime ? _splitTime.timeFormat() : ''
 
               const splitDeleteButton = document.createElement('button')
               // splitDeleteButton.id = `delete-${splitName}`
-              splitDeleteButton.style.fontSize = '1.5vh'
               splitDeleteButton.innerText = 'Delete'
+              splitDeleteButton.className = 'btn'
               splitDeleteButton.addEventListener('click', function() {
                 splitDiv.remove()
                 delete time[_splitName]
@@ -4009,7 +4007,7 @@ window.Timer = {
 
 
     const splitStuff = code.match(
-      /if\(25===[a-zA-Z0-9_$]{1,8}\|\|50===[a-zA-Z0-9_$]{1,8}\|\|100===[a-zA-Z0-9_$]{1,8}\)/
+      /if\(25===\n?[a-zA-Z0-9_$]{1,8}\|\|50===[a-zA-Z0-9_$]{1,8}\|\|100===[a-zA-Z0-9_$]{1,8}\)/
     )[0]
 
     code = code.replace(
@@ -4248,7 +4246,7 @@ window.BootstrapMenu.make = function () {
 
         <span style="color:white;font-family:Roboto,Arial,sans-serif;display:flex; justify-content: center; align-items: center; text-align: center;">Pudding Mod Settings</span>
 
-    <select style="margin:3px;background-color:#1155CC;color:white;font-family:Roboto,Arial,sans-serif;display:flex; justify-content: center; align-items: center; text-align: center;" id="stat-chooser" class="form-control">
+    <select style="margin-top:3px;margin-bottom:3px;margin-left: auto; margin-right: auto;background-color:#1155CC;color:white;font-family:Roboto,Arial,sans-serif;display:flex; justify-content: center; align-items: center; text-align: center; align:center;" id="stat-chooser" class="form-control">
         <option value="inputGame">Count game inputs</option>
         <option value="inputSession">Count session inputs</option>
         <option value="inputLifetime">Count lifetime inputs</option>
@@ -4515,7 +4513,7 @@ window.BootstrapMenu.make = function () {
     });
 
     const backButton = 'p17HVe';
-    document.querySelector("img[class^=\"" + backButton + "\"]").addEventListener("click", (e) => {
+    document.querySelector("[class^=\"" + backButton + "\"]").addEventListener("click", (e) => {
         window.BootstrapHide();
         if (window.isSnakeMobileVersion) {
             if (localStorage.getItem('snakeChosenMod') === "VisibilityMod") {
@@ -4525,7 +4523,7 @@ window.BootstrapMenu.make = function () {
     });
 
     const playButton = 'NSjDf';
-    document.querySelector("div[jsname^=\"" + playButton + "\"]").addEventListener("click", (e) => {
+    document.querySelector("[jsname^=\"" + playButton + "\"]").addEventListener("click", (e) => {
         window.BootstrapHide();
         if (window.isSnakeMobileVersion) {
             if (localStorage.getItem('snakeChosenMod') === "VisibilityMod") {
@@ -4788,9 +4786,10 @@ window.CustomPortalPairs.alterCode = function (code) {
 
     window.custom_pair_call_counter = 0; // Reset every new game
 
-    reset_regex = new RegExp(/;this\.reset\(\)/)
+    reset_regex = new RegExp(/;this\.reset\(\)\}\}/)
 
-    counter_reset_code = `window.custom_pair_call_counter = 0;this.reset();`
+    counter_reset_code = `window.custom_pair_call_counter = 0;
+    $&`
 
     code = code.assertReplace(reset_regex, counter_reset_code);
     portal_pairs_regex = new RegExp(/this\.[a-zA-Z0-9_$]{1,8}\[[a-zA-Z0-9_$]{1,8}\]\.[a-zA-Z0-9_$]{1,8}=[a-zA-Z0-9_$]{1,8}\(this\)/)
