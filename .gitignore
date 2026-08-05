@@ -1,2 +1,8 @@
 deletestuff.html
 PuddingMod.js
+
+# Cached downloads / dump artifacts (regenerate with tools scripts)
+tools/snake-current.js
+tools/snake-mod-loader-web.js
+tools/altered-*.js
+tools/.broken-*.js
