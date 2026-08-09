@@ -324,6 +324,7 @@ async function main() {
     "Theme",
     "DistinctVisual",
     "Counter",
+    "ModeRegistry",
     "TimeKeeper",
     "Fruit",
     "TopBar",
@@ -335,6 +336,7 @@ async function main() {
     "BootstrapMenu",
     "ResetKey",
     "RenderDelayFix",
+    "CustomBowl",
   ];
   window.NepDebug = false;
   window.isVisi = false;
