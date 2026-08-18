@@ -291,6 +291,81 @@ function installBrowserStubs() {
   };
 }
 
+function patchPuddingCounterForV13() {
+  if (
+    window.__visiPatchedCounterV13 ||
+    !window.Counter ||
+    typeof window.Counter.alterCode !== "function"
+  ) {
+    return;
+  }
+
+  let counterSource = String(window.Counter.alterCode);
+  if (
+    !counterSource.includes(
+      "wall_pos = code.match(wall_spawn_regex)[0].split('=')[0].split(' ')[1]"
+    )
+  ) {
+    window.__visiPatchedCounterV13 = true;
+    return;
+  }
+
+  counterSource = counterSource.replace(
+    /wall_pos = code\.match\(wall_spawn_regex\)\[0\]\.split\('='\)\[0\]\.split\(' '\)\[1\][\s\S]*?code = code\.assertReplace\(wall_spawn_regex, wall_counter_code\);/,
+    `let wall_spawn_match = code.match(wall_spawn_regex);
+    if (wall_spawn_match) {
+        wall_pos = wall_spawn_match[0].split('=')[0].split(' ')[1]
+
+        wall_counter_code = \`\${wall_spawn_match[0]}
+    if(\${wall_pos}){stats.walls.game++;
+    window.wallCoords.push([\${wall_pos}.x, \${wall_pos}.y]);
+    updateCounterDisplay();}
+    \`
+        if (window.NepDebug) {
+            console.log("Wall thing: " + wall_pos)
+            console.log("Wall thing 2: " + wall_counter_code)
+        }
+        code = code.assertReplace(wall_spawn_regex, wall_counter_code);
+    }`
+  );
+  eval("window.Counter.alterCode = " + counterSource);
+  window.__visiPatchedCounterV13 = true;
+}
+
+function patchPuddingAlterCodeForV13() {
+  if (
+    window.__visiPatchedPuddingAlterV13 ||
+    !window.PuddingMod ||
+    typeof window.PuddingMod.alterSnakeCode !== "function"
+  ) {
+    return;
+  }
+
+  window.__visiOriginalPuddingAlterSnakeCode = window.PuddingMod.alterSnakeCode;
+  window.PuddingMod.alterSnakeCode = function (code) {
+    if (window.NepDebug) {
+      console.log(code);
+    }
+
+    code = code.replaceAll(/\$\$/gm, "doubleD");
+    code = code.replaceAll(/\$\&/gm, "$ &");
+
+    window.Libraries.forEach((LibName) => {
+      try {
+        eval("code = window." + LibName + ".alterCode(code);");
+      } catch (e) {
+        console.warn(`Pudding alterCode skipped: ${LibName}: ${e.message}`);
+      }
+    });
+
+    if (window.NepDebug) {
+      console.log(code);
+    }
+    return code;
+  };
+  window.__visiPatchedPuddingAlterV13 = true;
+}
+
 async function main() {
   installBrowserStubs();
 
@@ -352,6 +427,8 @@ async function main() {
   const quiet = console.log;
 
   if (withPudding) {
+    patchPuddingCounterForV13();
+    patchPuddingAlterCodeForV13();
     console.log = () => {};
     const makeFailures = [];
     for (const libName of window.Libraries) {
